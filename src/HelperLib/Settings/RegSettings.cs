@@ -1,13 +1,12 @@
 ﻿using Microsoft.Win32;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace HelperLib.Settings
 {
-    public class RegSettings : IDisposable
+    public class RegSettings : IDisposable, IEnumerable, IEnumerator
     {
-        public event Action<RegSettings, string> AlreadyExistSetting;
-
         Dictionary<string, object> settings;
         RegistryKey Key;
 
@@ -25,6 +24,38 @@ namespace HelperLib.Settings
                     SetValue(index, value);
             }
         }
+        public KeyValuePair<string, object> this[int index]
+        {
+            get
+            {
+                int numer = -1;
+                foreach (var item in settings)
+                {
+                    if (index == numer)
+                        return item;
+                    numer++;
+                }
+                return default(KeyValuePair<string, object>);                  
+            }
+            set
+            {
+                int numer = -1;
+                string name = string.Empty;
+
+                foreach (var item in settings)
+                {
+                    if (index == numer)
+                        name = item.Key;
+                    numer++;
+                }
+
+                if(string.IsNullOrWhiteSpace(name))
+                    SetValue(name, value);
+                else
+                    settings[name] = value;
+            }
+        }
+
         public string AppName { get; set; }
 
         public RegSettings(string AppName)
@@ -66,7 +97,7 @@ namespace HelperLib.Settings
         }
 
         #region IDisposable Support
-        private bool disposedValue = false; // Для определения избыточных вызовов
+        private bool disposedValue = false;
 
         protected virtual void Dispose(bool disposing)
         {
@@ -74,29 +105,53 @@ namespace HelperLib.Settings
             {
                 if (disposing)
                 {
-                    // TODO: освободить управляемое состояние (управляемые объекты).
+                    settings.Clear();
+                    settings = null;
                 }
 
-                // TODO: освободить неуправляемые ресурсы (неуправляемые объекты) и переопределить ниже метод завершения.
-                // TODO: задать большим полям значение NULL.
+                Key.Close();
 
                 disposedValue = true;
             }
         }
-
-        // TODO: переопределить метод завершения, только если Dispose(bool disposing) выше включает код для освобождения неуправляемых ресурсов.
-        // ~RegSettings() {
-        //   // Не изменяйте этот код. Разместите код очистки выше, в методе Dispose(bool disposing).
-        //   Dispose(false);
-        // }
-
-        // Этот код добавлен для правильной реализации шаблона высвобождаемого класса.
+        ~RegSettings()
+        {
+            Dispose(false);
+        }
         public void Dispose()
         {
-            // Не изменяйте этот код. Разместите код очистки выше, в методе Dispose(bool disposing).
             Dispose(true);
-            // TODO: раскомментировать следующую строку, если метод завершения переопределен выше.
-            // GC.SuppressFinalize(this);
+            GC.SuppressFinalize(this);
+        }
+        #endregion
+
+        #region IEnumerable, IEnumerator Support
+        int index = -1;
+        public IEnumerator GetEnumerator()
+        {
+            return this;
+        }
+        public bool MoveNext()
+        {
+            if (index >= settings.Count)
+            {
+                Reset();
+                return false;
+            }
+
+            index++;
+            return true;
+        }
+        public void Reset()
+        {
+            index = -1;
+        }
+        public object Current
+        {
+            get
+            {
+                return this[index];
+            }
         }
         #endregion
     }
