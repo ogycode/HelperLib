@@ -5,12 +5,13 @@ using System.Collections.Generic;
 
 namespace HelperLib.Settings
 {
-    public class RegSettings : IDisposable, IEnumerable, IEnumerator
+    public class RegSettings : IDisposable, IEnumerable
     {
-        Dictionary<string, object> settings;
+        Dictionary<string, string> settings;
         RegistryKey Key;
+        RegistryKey KeyCustom;
 
-        public object this[string index]
+        public string this[string index]
         {
             get
             {
@@ -18,70 +19,59 @@ namespace HelperLib.Settings
             }
             set
             {
-                if (settings.ContainsKey(index))
-                    settings[index] = value;
-                else
-                    SetValue(index, value);
+                SetValue(index, value);
             }
         }
-        public KeyValuePair<string, object> this[int index]
-        {
-            get
-            {
-                int numer = -1;
-                foreach (var item in settings)
-                {
-                    if (index == numer)
-                        return item;
-                    numer++;
-                }
-                return default(KeyValuePair<string, object>);                  
-            }
-            set
-            {
-                int numer = -1;
-                string name = string.Empty;
-
-                foreach (var item in settings)
-                {
-                    if (index == numer)
-                        name = item.Key;
-                    numer++;
-                }
-
-                if(string.IsNullOrWhiteSpace(name))
-                    SetValue(name, value);
-                else
-                    settings[name] = value;
-            }
-        }
-
         public string AppName { get; set; }
 
         public RegSettings(string AppName)
         {
-            settings = new Dictionary<string, object>();
+            settings = new Dictionary<string, string>();
             this.AppName = AppName;
             Key = Registry.CurrentUser.CreateSubKey($"SOFTWARE\\{this.AppName}\\Settings");
+            KeyCustom = Registry.CurrentUser.CreateSubKey($"SOFTWARE\\{this.AppName}\\Settings\\ISettingStruct");
             Load();
         }
 
-        public object SetValue(string name, object value)
+        public object SetValue<T>(string name, T value)
         {
-            if (settings.ContainsKey(name))
-                settings[name] = value;
-            else
-                settings.Add(name, value);
+            string obj = value is ISettingStruct ? (value as ISettingStruct).GetValue() : value.ToString();
 
-            Key.SetValue(name, value);
+            if (settings.ContainsKey(name))
+                settings[name] = obj;
+            else
+                settings.Add(name, obj);
+
+            if (value is ISettingStruct)
+                KeyCustom.SetValue(name, (value as ISettingStruct).GetValue());
+            else
+                Key.SetValue(name, value);
+
             return value;
         }
         public T GetValue<T>(string name)
         {
+            object obj = null;
             if (settings.ContainsKey(name))
-                return (T)settings[name];
+                obj = Key.GetValue(name);
             else
                 return default(T);
+
+            if (obj is T)
+                return (T)obj;
+            else
+            {
+                try
+                {
+                    return (T)Convert.ChangeType(obj, typeof(T));
+                }
+                catch (InvalidCastException)
+                {
+                    return default(T);
+                }
+            }
+
+
         }
         public void Clear()
         {
@@ -93,7 +83,10 @@ namespace HelperLib.Settings
         void Load()
         {
             foreach (var item in Key.GetValueNames())
-                settings.Add(item, Key.GetValue(item));
+                settings.Add(item, Key.GetValue(item).ToString());
+
+            foreach (var item in KeyCustom.GetValueNames())
+                settings.Add(item, KeyCustom.GetValue(item).ToString());
         }
 
         #region IDisposable Support
@@ -124,35 +117,9 @@ namespace HelperLib.Settings
             GC.SuppressFinalize(this);
         }
         #endregion
-
-        #region IEnumerable, IEnumerator Support
-        int index = -1;
         public IEnumerator GetEnumerator()
         {
-            return this;
+            return ((IEnumerable)settings).GetEnumerator();
         }
-        public bool MoveNext()
-        {
-            if (index >= settings.Count)
-            {
-                Reset();
-                return false;
-            }
-
-            index++;
-            return true;
-        }
-        public void Reset()
-        {
-            index = -1;
-        }
-        public object Current
-        {
-            get
-            {
-                return this[index];
-            }
-        }
-        #endregion
     }
 }

@@ -31,6 +31,10 @@ namespace HelperLibTestApp
             regSettings = new RegSettings("Test App");
             btnDispose.IsEnabled = true;
             btnInit.IsEnabled = false;
+
+            lbSettings.Items.Clear();
+            foreach (dynamic item in regSettings)
+                lbSettings.Items.Add($"{item.Key} = {item.Value}");
         }
         private void btnDisposeClick(object sender, RoutedEventArgs e)
         {
@@ -41,19 +45,42 @@ namespace HelperLibTestApp
         private void btnAddingClick(object sender, RoutedEventArgs e)
         {
             regSettings[tbKey.Text] = tbValue.Text;
+            lbSettings.Items.Add($"{tbKey.Text} = {tbValue.Text}");
+            tbKey.Text = "";
+            tbValue.Text = "";
         }
         private void btnGetClick(object sender, RoutedEventArgs e)
         {
-            tbGetResonse.Text = $"Value = {regSettings[tbGetKey.Text].ToString()}";
+            tbGetResonse.Text = $"Value = {regSettings[tbGetKey.Text]}";
             tbGetResonse.Visibility = Visibility.Visible;
         }
-        private void btnLoadSettingClick(object sender, RoutedEventArgs e)
+        private void btnGetIntClick(object sender, RoutedEventArgs e)
         {
+            int a = regSettings.GetValue<int>(tbGetKeyInt.Text);
+
+            tbGetResonseInt.Text = $"Value = {a.ToString()}";
+            tbGetResonseInt.Visibility = Visibility.Visible;
+        }
+        private void btnGetDoubleClick(object sender, RoutedEventArgs e)
+        {
+            double a = regSettings.GetValue<double>(tbGetKeyDouble.Text);
+
+            tbGetResonseDouble.Text = $"Value = {a.ToString()}";
+            tbGetResonseDouble.Visibility = Visibility.Visible;
+        }
+        private void btnSetStructClick(object sender, RoutedEventArgs e)
+        {
+            TestStruct ts = new TestStruct();
+            ts.a = TestStruct.getInt(tbSetStruct1.Text);
+            ts.b = TestStruct.getInt(tbSetStruct2.Text);
+            ts.c = TestStruct.getInt(tbSetStruct3.Text);
+            ts.g = TestStruct.getInt(tbSetStruct4.Text);
+
+            regSettings.SetValue("testStruct", ts);
+
             lbSettings.Items.Clear();
-            foreach (var item in regSettings)
-            {
-                lbSettings.Items.Add($"{((KeyValuePair<string, object>)item).Key} = {((KeyValuePair<string, object>)item).Value}");
-            }
+            foreach (dynamic item in regSettings)
+                lbSettings.Items.Add($"{item.Key} = {item.Value}");
         }
     }
 }
