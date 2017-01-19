@@ -41,13 +41,17 @@ namespace HelperLibTestApp
             regSettings.Dispose();
             btnDispose.IsEnabled = false;
             btnInit.IsEnabled = true;
+            lbSettings.Items.Clear();
         }
         private void btnAddingClick(object sender, RoutedEventArgs e)
         {
             regSettings[tbKey.Text] = tbValue.Text;
-            lbSettings.Items.Add($"{tbKey.Text} = {tbValue.Text}");
             tbKey.Text = "";
             tbValue.Text = "";
+
+            lbSettings.Items.Clear();
+            foreach (dynamic item in regSettings)
+                lbSettings.Items.Add($"{item.Key} = {item.Value}");
         }
         private void btnGetClick(object sender, RoutedEventArgs e)
         {
@@ -76,8 +80,30 @@ namespace HelperLibTestApp
             ts.c = TestStruct.getInt(tbSetStruct3.Text);
             ts.g = TestStruct.getInt(tbSetStruct4.Text);
 
-            regSettings.SetValue("testStruct", ts);
+            regSettings.SetValue(tbSetStructName.Text, ts);
 
+            lbSettings.Items.Clear();
+            foreach (dynamic item in regSettings)
+                lbSettings.Items.Add($"{item.Key} = {item.Value}");
+
+            tbSetStructName.Text = "";
+            tbSetStruct1.Text = "";
+            tbSetStruct2.Text = "";
+            tbSetStruct3.Text = "";
+            tbSetStruct4.Text = "";
+        }
+        private void btnDeleteClick(object sender, RoutedEventArgs e)
+        {
+            regSettings.DeleteValue(tbDeleteValue.Text);
+            tbDeleteValue.Text = "";
+
+            lbSettings.Items.Clear();
+            foreach (dynamic item in regSettings)
+                lbSettings.Items.Add($"{item.Key} = {item.Value}");
+        }
+        private void sValueValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            regSettings[tbChngeValueName.Text] = sValue.Value;
             lbSettings.Items.Clear();
             foreach (dynamic item in regSettings)
                 lbSettings.Items.Add($"{item.Key} = {item.Value}");

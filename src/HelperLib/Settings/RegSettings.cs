@@ -7,11 +7,11 @@ namespace HelperLib.Settings
 {
     public class RegSettings : IDisposable, IEnumerable
     {
-        Dictionary<string, string> settings;
+        Dictionary<string, object> settings;
         RegistryKey Key;
         RegistryKey KeyCustom;
 
-        public string this[string index]
+        public object this[string index]
         {
             get
             {
@@ -26,13 +26,25 @@ namespace HelperLib.Settings
 
         public RegSettings(string AppName)
         {
-            settings = new Dictionary<string, string>();
+            settings = new Dictionary<string, object>();
             this.AppName = AppName;
             Key = Registry.CurrentUser.CreateSubKey($"SOFTWARE\\{this.AppName}\\Settings");
             KeyCustom = Registry.CurrentUser.CreateSubKey($"SOFTWARE\\{this.AppName}\\Settings\\ISettingStruct");
             Load();
         }
 
+        public bool DeleteValue(string name)
+        {
+            if (settings.ContainsKey(name))
+            {
+                settings.Remove(name);
+                if (KeyCustom.GetValue(name) != null)
+                    KeyCustom.DeleteValue(name);
+                else
+                    Key.DeleteValue(name);
+            }
+            return false;
+        }
         public object SetValue<T>(string name, T value)
         {
             string obj = value is ISettingStruct ? (value as ISettingStruct).GetValue() : value.ToString();
@@ -61,17 +73,25 @@ namespace HelperLib.Settings
                 return (T)obj;
             else
             {
-                try
-                {
-                    return (T)Convert.ChangeType(obj, typeof(T));
-                }
-                catch (InvalidCastException)
-                {
-                    return default(T);
-                }
+                try { return (T)Convert.ChangeType(obj, typeof(T)); }
+                catch { return default(T); }
             }
+        }
+        public T GetValue<T>(string name, T defaultValue)
+        {
+            object obj = null;
+            if (settings.ContainsKey(name))
+                obj = Key.GetValue(name);
+            else
+                return defaultValue;
 
-
+            if (obj is T)
+                return (T)obj;
+            else
+            {
+                try { return (T)Convert.ChangeType(obj, typeof(T)); }
+                catch { return defaultValue; }
+            }
         }
         public void Clear()
         {
@@ -83,10 +103,10 @@ namespace HelperLib.Settings
         void Load()
         {
             foreach (var item in Key.GetValueNames())
-                settings.Add(item, Key.GetValue(item).ToString());
+                settings.Add(item, Key.GetValue(item));
 
             foreach (var item in KeyCustom.GetValueNames())
-                settings.Add(item, KeyCustom.GetValue(item).ToString());
+                settings.Add(item, KeyCustom.GetValue(item));
         }
 
         #region IDisposable Support
