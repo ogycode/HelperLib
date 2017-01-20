@@ -3,7 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace HelperLib.Settings
+namespace Verloka.HelperLib.Settings
 {
     public class RegSettings : IDisposable, IEnumerable
     {
@@ -15,7 +15,7 @@ namespace HelperLib.Settings
         {
             get
             {
-                return settings.ContainsKey(index) ? settings[index] : null;
+                return settings.ContainsKey(index) ? settings[index] : GetValue<object>(index);
             }
             set
             {
@@ -64,12 +64,27 @@ namespace HelperLib.Settings
         public T GetValue<T>(string name)
         {
             object obj = null;
-            if (settings.ContainsKey(name))
-                obj = Key.GetValue(name);
-            else
-                return default(T);
+            bool isStruct = false;
 
-            if (obj is T)
+            if (settings.ContainsKey(name))
+            {
+                obj = Key.GetValue(name);
+                if (obj == null)
+                {
+                    obj = KeyCustom.GetValue(name);
+                    isStruct = true;
+                }
+            }
+            else
+                return (T)SetValue(name, default(T));
+
+            if (isStruct)
+            {
+                var a = Activator.CreateInstance(typeof(T));
+                (a as ISettingStruct).SetValue(obj.ToString());
+                return (T)a;
+            }
+            else if (obj is T)
                 return (T)obj;
             else
             {
@@ -80,12 +95,27 @@ namespace HelperLib.Settings
         public T GetValue<T>(string name, T defaultValue)
         {
             object obj = null;
-            if (settings.ContainsKey(name))
-                obj = Key.GetValue(name);
-            else
-                return defaultValue;
+            bool isStruct = false;
 
-            if (obj is T)
+            if (settings.ContainsKey(name))
+            {
+                obj = Key.GetValue(name);
+                if (obj == null)
+                {
+                    obj = KeyCustom.GetValue(name);
+                    isStruct = true;
+                }
+            }
+            else
+                return (T)SetValue(name, default(T));
+
+            if (isStruct)
+            {
+                var a = Activator.CreateInstance(typeof(T));
+                (a as ISettingStruct).SetValue(obj.ToString());
+                return (T)a;
+            }
+            else if (obj is T)
                 return (T)obj;
             else
             {

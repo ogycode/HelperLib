@@ -1,6 +1,6 @@
 ﻿namespace HelperLibTestApp
 {
-    public class TestStruct : HelperLib.Settings.ISettingStruct
+    public class TestStruct : Verloka.HelperLib.Settings.ISettingStruct
     {
         public int a, b, c, g;
         

@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>Verloka.HelperLib</id>
-    <version>1.0.0.0</version>
+    <version>1.0.0.1</version>
     <title>HelperLib</title>
     <authors>Verloka Vadim</authors>
     <owners>Verloka Vadim</owners>
@@ -13,6 +13,6 @@
     <description>Lib for saving your data in Register as settings and other helpers methods</description>
     <releaseNotes>Release</releaseNotes>
     <copyright>Copyright Verloka Vadim 2017</copyright>
-    <tags>Regedit Settings Reg</tags>
+    <tags>Added converter for custom struct on GetValue method</tags>
   </metadata>
 </package>

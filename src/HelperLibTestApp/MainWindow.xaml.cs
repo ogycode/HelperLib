@@ -1,4 +1,4 @@
-﻿using HelperLib.Settings;
+﻿using Verloka.HelperLib.Settings;
 using System;
 using System.Collections.Generic;
 using System.Linq;
