@@ -136,6 +136,7 @@
                             <TextBox x:Name="tbChngeValueName" Grid.Column="1" Margin="5" Grid.Row="1"/>
                             <Slider x:Name="sValue" Grid.Row="2" Grid.ColumnSpan="2" Margin="5" ValueChanged="sValueValueChanged" SmallChange="1" Maximum="200" TickPlacement="Both" AutoToolTipPlacement="TopLeft"/>
                         </Grid>
+                        <Button x:Name="btnClear" Margin="10" Content="Clear settings" Click="btnClearClick"/>
                     </StackPanel>
                 </ScrollViewer>
             </TabItem>

@@ -7,7 +7,7 @@
     <ProjectGuid>{243AE53E-B468-4498-A190-2BC835477F2C}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>HelperLib</RootNamespace>
+    <RootNamespace>Verloka.HelperLib</RootNamespace>
     <AssemblyName>HelperLib</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -43,7 +43,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Verloka\Settings\ISettingStruct.cs" />
     <Compile Include="Verloka\Settings\RegSettings.cs" />
-    <Compile Include="Verloka\Settings\SettingStruct.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="HelperLib.nuspec" />

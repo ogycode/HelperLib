@@ -5,25 +5,36 @@ using System.Collections.Generic;
 
 namespace Verloka.HelperLib.Settings
 {
+    /// <summary>
+    /// General class fro working with settings
+    /// </summary>
     public class RegSettings : IDisposable, IEnumerable
     {
         Dictionary<string, object> settings;
         RegistryKey Key;
         RegistryKey KeyCustom;
 
+        /// <summary>
+        /// Indexer
+        /// </summary>
+        /// <param name="index">name of setting</param>
+        /// <returns>setting in object type</returns>
         public object this[string index]
         {
-            get
-            {
-                return settings.ContainsKey(index) ? settings[index] : GetValue<object>(index);
-            }
             set
             {
                 SetValue(index, value);
             }
         }
+        /// <summary>
+        /// Name of application
+        /// </summary>
         public string AppName { get; set; }
 
+        /// <summary>
+        /// Ctor
+        /// </summary>
+        /// <param name="AppName">Name of application</param>
         public RegSettings(string AppName)
         {
             settings = new Dictionary<string, object>();
@@ -33,6 +44,11 @@ namespace Verloka.HelperLib.Settings
             Load();
         }
 
+        /// <summary>
+        /// Delete value from register
+        /// </summary>
+        /// <param name="name">Name of setting</param>
+        /// <returns>True - successful; False - faild</returns>
         public bool DeleteValue(string name)
         {
             if (settings.ContainsKey(name))
@@ -45,9 +61,20 @@ namespace Verloka.HelperLib.Settings
             }
             return false;
         }
+        /// <summary>
+        /// Edit or add value
+        /// </summary>
+        /// <typeparam name="T">Any system type or ISettingStruct</typeparam>
+        /// <param name="name">Name of setting</param>
+        /// <param name="value">Value for adding or editing</param>
+        /// <returns>Value which added or edited</returns>
         public object SetValue<T>(string name, T value)
         {
-            string obj = value is ISettingStruct ? (value as ISettingStruct).GetValue() : value.ToString();
+            string obj;
+            if (value != null)
+                obj = value is ISettingStruct ? (value as ISettingStruct).GetValue() : value.ToString();
+            else
+                obj = "";
 
             if (settings.ContainsKey(name))
                 settings[name] = obj;
@@ -57,76 +84,88 @@ namespace Verloka.HelperLib.Settings
             if (value is ISettingStruct)
                 KeyCustom.SetValue(name, (value as ISettingStruct).GetValue());
             else
-                Key.SetValue(name, value);
+                Key.SetValue(name, (value == null) ? new object() : value);
 
             return value;
         }
+        /// <summary>
+        /// Get value by name
+        /// </summary>
+        /// <typeparam name="T">Any system type or ISettingStruct</typeparam>
+        /// <param name="name">Name of value</param>
+        /// <returns>Value by name</returns>
         public T GetValue<T>(string name)
         {
-            object obj = null;
-            bool isStruct = false;
-
             if (settings.ContainsKey(name))
             {
-                obj = Key.GetValue(name);
-                if (obj == null)
+                T instance;
+
+                try { instance = (T)Activator.CreateInstance(typeof(T)); }
+                catch { instance = default(T); }
+
+                if (instance is ISettingStruct)
                 {
-                    obj = KeyCustom.GetValue(name);
-                    isStruct = true;
+                    return GetCustom<T>(name);
+                }
+                else
+                {
+                    return GetStandart<T>(name);
                 }
             }
             else
-                return (T)SetValue(name, default(T));
+            {
+                T instance;
 
-            if (isStruct)
-            {
-                var a = Activator.CreateInstance(typeof(T));
-                (a as ISettingStruct).SetValue(obj.ToString());
-                return (T)a;
-            }
-            else if (obj is T)
-                return (T)obj;
-            else
-            {
-                try { return (T)Convert.ChangeType(obj, typeof(T)); }
-                catch { return default(T); }
+                try { instance = (T)Activator.CreateInstance(typeof(T)); }
+                catch { instance = default(T); }
+
+                return (T)SetValue(name, instance);
             }
         }
+        /// <summary>
+        /// Get value by name
+        /// </summary>
+        /// <typeparam name="T">Any system type or ISettingStruct</typeparam>
+        /// <param name="name">Name of value</param>
+        /// <param name="defaultValue">Вefault value if the value is not there</param>
+        /// <returns>Value by name</returns>
         public T GetValue<T>(string name, T defaultValue)
         {
-            object obj = null;
-            bool isStruct = false;
-
             if (settings.ContainsKey(name))
             {
-                obj = Key.GetValue(name);
-                if (obj == null)
+                T instance;
+
+                try { instance = (T)Activator.CreateInstance(typeof(T)); }
+                catch (Exception) { instance = default(T); }
+
+                if (instance is ISettingStruct)
                 {
-                    obj = KeyCustom.GetValue(name);
-                    isStruct = true;
+                    return GetCustom<T>(name);
+                }
+                else
+                {
+                    return GetStandart<T>(name);
                 }
             }
             else
-                return (T)SetValue(name, default(T));
-
-            if (isStruct)
             {
-                var a = Activator.CreateInstance(typeof(T));
-                (a as ISettingStruct).SetValue(obj.ToString());
-                return (T)a;
-            }
-            else if (obj is T)
-                return (T)obj;
-            else
-            {
-                try { return (T)Convert.ChangeType(obj, typeof(T)); }
-                catch { return defaultValue; }
+                return (T)SetValue(name, defaultValue);
             }
         }
+        /// <summary>
+        /// Delete all settings from register
+        /// </summary>
         public void Clear()
         {
-            foreach (var item in settings)
-                Key.DeleteValue(item.Key);
+            var s = Key.GetValueNames();
+            var c = KeyCustom.GetValueNames();
+
+            foreach (var item in s)
+                Key.DeleteValue(item);
+
+            foreach (var item in c)
+                KeyCustom.DeleteValue(item);
+
             settings.Clear();
         }
 
@@ -137,6 +176,19 @@ namespace Verloka.HelperLib.Settings
 
             foreach (var item in KeyCustom.GetValueNames())
                 settings.Add(item, KeyCustom.GetValue(item));
+        }
+        T GetStandart<T>(string name)
+        {
+            object obj = Key.GetValue(name);
+            try { return (T)Convert.ChangeType(obj, typeof(T)); }
+            catch { return default(T); }
+        }
+        T GetCustom<T>(string name)
+        {
+            object obj = KeyCustom.GetValue(name);
+            var a = Activator.CreateInstance(typeof(T));
+            (a as ISettingStruct).SetValue(obj.ToString());
+            return (T)a;
         }
 
         #region IDisposable Support

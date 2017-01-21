@@ -33,5 +33,9 @@
             int.TryParse(num, out i);
             return i;
         }
+        public override string ToString()
+        {
+            return $"{a},{b},{c},{g}";
+        }
     }
 }

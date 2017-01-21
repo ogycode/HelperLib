@@ -55,7 +55,7 @@ namespace HelperLibTestApp
         }
         private void btnGetClick(object sender, RoutedEventArgs e)
         {
-            tbGetResonse.Text = $"Value = {regSettings[tbGetKey.Text]}";
+            tbGetResonse.Text = $"Value = {regSettings.GetValue<object>(tbGetKey.Text)}";
             tbGetResonse.Visibility = Visibility.Visible;
         }
         private void btnGetIntClick(object sender, RoutedEventArgs e)
@@ -105,6 +105,13 @@ namespace HelperLibTestApp
         {
             regSettings[tbChngeValueName.Text] = sValue.Value;
             lbSettings.Items.Clear();
+            foreach (dynamic item in regSettings)
+                lbSettings.Items.Add($"{item.Key} = {item.Value}");
+        }
+        private void btnClearClick(object sender, RoutedEventArgs e)
+        {
+            regSettings.Clear();
+
             foreach (dynamic item in regSettings)
                 lbSettings.Items.Add($"{item.Key} = {item.Value}");
         }
