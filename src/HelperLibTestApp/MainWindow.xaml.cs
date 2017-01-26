@@ -14,18 +14,22 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Verloka.HelperLib.Update;
+using Microsoft.Win32;
+using System.IO;
 
 namespace HelperLibTestApp
 {
     public partial class MainWindow : Window
     {
         RegSettings regSettings;
+        UpdateClient update;
 
         public MainWindow()
         {
             InitializeComponent();
         }
-
+        //Settings
         private void btnInitClick(object sender, RoutedEventArgs e)
         {
             regSettings = new RegSettings("Test App");
@@ -114,6 +118,45 @@ namespace HelperLibTestApp
 
             foreach (dynamic item in regSettings)
                 lbSettings.Items.Add($"{item.Key} = {item.Value}");
+        }
+        //Update
+        private void btnInitUpdateClick(object sender, RoutedEventArgs e)
+        {
+            update = new UpdateClient(tbUpdateUrl.Text);
+            update.NewVersion += UpdateNewVersion;
+
+            update.Check(new Verloka.HelperLib.Update.Version(1,1,1,0));
+        }
+        private void UpdateNewVersion(UpdateItem obj)
+        {
+
+        }
+        private void btnAddUpdateFileClick(object sender, RoutedEventArgs e)
+        {
+            lbUpdateFiles.Items.Add(tbUpdateFile.Text);
+            tbUpdateFile.Text = "";
+        }
+        private void btnCreateUpdateFileClick(object sender, RoutedEventArgs e)
+        {
+            UpdateItem item = new UpdateItem();
+            item.Title = tbUpdateTitle.Text;
+            item.ChangeNote = tbUpdateChangeLog.Text;
+            item.Date = DateTime.Now;
+            item.VersionNumber = new Verloka.HelperLib.Update.Version(tbUpdateVersionMajor.Text,
+                                                                      tbUpdateVersionMinor.Text,
+                                                                      tbUpdateVersionRevision.Text,
+                                                                      tbUpdateVersionBuild.Text);
+
+            foreach (var url in lbUpdateFiles.Items)
+                item.Files.Add(url as string);
+
+            string str = UpdateClient.Serialize(item);
+
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.Filter = "Json file (*.json)|*.json";
+            saveFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+            if (saveFileDialog.ShowDialog() == true)
+                File.WriteAllText(saveFileDialog.FileName, str, Encoding.UTF8);
         }
     }
 }
