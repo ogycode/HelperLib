@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>Verloka.HelperLib</id>
-    <version>1.0.0.4</version>
+    <version>1.2.0.0</version>
     <title>HelperLib</title>
     <authors>Verloka Vadim</authors>
     <owners>Verloka Vadim</owners>
@@ -11,7 +11,7 @@
     <iconUrl>http://ICON_URL_HERE_OR_DELETE_THIS_LINE</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Lib for saving your data in Register as settings and other helpers methods</description>
-    <releaseNotes>New get methods</releaseNotes>
+    <releaseNotes>Added UpdateClient</releaseNotes>
     <copyright>Copyright Verloka Vadim 2017</copyright>
     <tags>Register setting</tags>
   </metadata>

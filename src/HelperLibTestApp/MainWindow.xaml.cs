@@ -23,7 +23,9 @@ namespace HelperLibTestApp
     public partial class MainWindow : Window
     {
         RegSettings regSettings;
+
         UpdateClient update;
+        UpdateItem ipdItem;
 
         public MainWindow()
         {
@@ -125,11 +127,17 @@ namespace HelperLibTestApp
             update = new UpdateClient(tbUpdateUrl.Text);
             update.NewVersion += UpdateNewVersion;
 
-            update.Check(new Verloka.HelperLib.Update.Version(1,1,1,0));
+            tbUpdateUrl.IsEnabled = false;
+            btnInitUpdate.IsEnabled = false;
         }
         private void UpdateNewVersion(UpdateItem obj)
         {
+            ipdItem = obj;
 
+            tbUpdatTitle.Text = ipdItem.Title;
+            tbUpdatVersion.Text = ipdItem.VersionNumber.ToString();
+            tbUpdatDate.Text = ipdItem.Date.ToString();
+            tbUpdatChangelog.Text = ipdItem.ChangeNote;
         }
         private void btnAddUpdateFileClick(object sender, RoutedEventArgs e)
         {
@@ -157,6 +165,28 @@ namespace HelperLibTestApp
             saveFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
             if (saveFileDialog.ShowDialog() == true)
                 File.WriteAllText(saveFileDialog.FileName, str, Encoding.UTF8);
+        }
+        private void btnUpdateCheckClick(object sender, RoutedEventArgs e)
+        {
+            update.Check(new Verloka.HelperLib.Update.Version(1, 1, 1, 0));
+        }
+        private void btnUpdateDownloadClick(object sender, RoutedEventArgs e)
+        {
+            DownloadClient dc = new DownloadClient(ipdItem.Files, Environment.GetFolderPath(Environment.SpecialFolder.Desktop));
+            dc.DownloadProgress += DcDownloadProgress;
+            dc.DownloadCompleted += DcDownloadCompleted;
+            dc.Start();
+        }
+        private void DcDownloadProgress(string name, int perc, double speed)
+        {
+            tbDownloadSpeed.Text = $"{speed.ToString("0")} Kb/s";
+            pbDownload.Value = perc;
+            tbFileName.Text = name;
+        }
+        private void DcDownloadCompleted()
+        {
+            pbDownload.IsIndeterminate = true;
+            tbDownloadSpeed.Text = "Completed";
         }
     }
 }
