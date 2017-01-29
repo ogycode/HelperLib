@@ -2,18 +2,36 @@
 
 namespace Verloka.HelperLib.Update
 {
+    /// <summary>
+    /// Verison information
+    /// </summary>
     [DataContract]
     public class Version
     {
+        /// <summary>
+        /// Major number
+        /// </summary>
         [DataMember]
         public int Major { get; set; }
+        /// <summary>
+        /// Minor number
+        /// </summary>
         [DataMember]
         public int Minor { get; set; }
+        /// <summary>
+        /// Revision number
+        /// </summary>
         [DataMember]
         public int Revision { get; set; }
+        /// <summary>
+        /// Build number
+        /// </summary>
         [DataMember]
         public int Build { get; set; }
 
+        /// <summary>
+        /// Initializes an object of Version
+        /// </summary>
         public Version()
         {
             Major = 1;
@@ -21,6 +39,13 @@ namespace Verloka.HelperLib.Update
             Revision = 0;
             Build = 0;
         }
+        /// <summary>
+        /// Initializes an object of Version
+        /// </summary>
+        /// <param name="Major">Major number</param>
+        /// <param name="Minor">Minor number</param>
+        /// <param name="Revision">Revision number</param>
+        /// <param name="Build">Build number</param>
         public Version(int Major, int Minor, int Revision, int Build)
         {
             this.Major = Major;
@@ -28,6 +53,13 @@ namespace Verloka.HelperLib.Update
             this.Revision = Revision;
             this.Build = Build;
         }
+        /// <summary>
+        /// Initializes an object of Version
+        /// </summary>
+        /// <param name="Major">Major number</param>
+        /// <param name="Minor">Minor number</param>
+        /// <param name="Revision">Revision number</param>
+        /// <param name="Build">Build number</param>
         public Version(string Major, string Minor, string Revision, string Build)
         {
             int i = 0;
