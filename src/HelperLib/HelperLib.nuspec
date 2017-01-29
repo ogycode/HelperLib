@@ -8,7 +8,7 @@
     <owners>Verloka Vadim</owners>
     <licenseUrl>https://github.com/ogycode/HelperLib/blob/master/LICENSE</licenseUrl>
     <projectUrl>https://github.com/ogycode/HelperLib</projectUrl>
-    <iconUrl>http://ICON_URL_HERE_OR_DELETE_THIS_LINE</iconUrl>
+    <iconUrl>https://raw.githubusercontent.com/ogycode/HelperLib/master/merch/icon.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Lib for saving your data in Register as settings and other helpers methods</description>
     <releaseNotes>Added UpdateClient</releaseNotes>
