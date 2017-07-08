@@ -5,20 +5,12 @@ using System.Collections.Generic;
 
 namespace Verloka.HelperLib.Settings
 {
-    /// <summary>
-    /// General class fro working with settings
-    /// </summary>
     public class RegSettings : IDisposable, IEnumerable
     {
         Dictionary<string, object> settings;
         RegistryKey Key;
         RegistryKey KeyCustom;
 
-        /// <summary>
-        /// Indexer
-        /// </summary>
-        /// <param name="index">name of setting</param>
-        /// <returns>setting in object type</returns>
         public object this[string index]
         {
             set
@@ -26,15 +18,8 @@ namespace Verloka.HelperLib.Settings
                 SetValue(index, value);
             }
         }
-        /// <summary>
-        /// Name of application
-        /// </summary>
         public string AppName { get; set; }
 
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="AppName">Name of application</param>
         public RegSettings(string AppName)
         {
             settings = new Dictionary<string, object>();
@@ -44,11 +29,6 @@ namespace Verloka.HelperLib.Settings
             Load();
         }
 
-        /// <summary>
-        /// Delete value from register
-        /// </summary>
-        /// <param name="name">Name of setting</param>
-        /// <returns>True - successful; False - faild</returns>
         public bool DeleteValue(string name)
         {
             if (settings.ContainsKey(name))
@@ -61,13 +41,6 @@ namespace Verloka.HelperLib.Settings
             }
             return false;
         }
-        /// <summary>
-        /// Edit or add value
-        /// </summary>
-        /// <typeparam name="T">Any system type or ISettingStruct</typeparam>
-        /// <param name="name">Name of setting</param>
-        /// <param name="value">Value for adding or editing</param>
-        /// <returns>Value which added or edited</returns>
         public object SetValue<T>(string name, T value)
         {
             string obj;
@@ -88,12 +61,6 @@ namespace Verloka.HelperLib.Settings
 
             return value;
         }
-        /// <summary>
-        /// Get value by name
-        /// </summary>
-        /// <typeparam name="T">Any system type or ISettingStruct</typeparam>
-        /// <param name="name">Name of value</param>
-        /// <returns>Value by name</returns>
         public T GetValue<T>(string name)
         {
             if (settings.ContainsKey(name))
@@ -122,13 +89,6 @@ namespace Verloka.HelperLib.Settings
                 return (T)SetValue(name, instance);
             }
         }
-        /// <summary>
-        /// Get value by name
-        /// </summary>
-        /// <typeparam name="T">Any system type or ISettingStruct</typeparam>
-        /// <param name="name">Name of value</param>
-        /// <param name="defaultValue">Вefault value if the value is not there</param>
-        /// <returns>Value by name</returns>
         public T GetValue<T>(string name, T defaultValue)
         {
             if (settings.ContainsKey(name))
@@ -152,9 +112,6 @@ namespace Verloka.HelperLib.Settings
                 return (T)SetValue(name, defaultValue);
             }
         }
-        /// <summary>
-        /// Delete all settings from register
-        /// </summary>
         public void Clear()
         {
             var s = Key.GetValueNames();
@@ -219,6 +176,7 @@ namespace Verloka.HelperLib.Settings
             GC.SuppressFinalize(this);
         }
         #endregion
+
         public IEnumerator GetEnumerator()
         {
             return ((IEnumerable)settings).GetEnumerator();

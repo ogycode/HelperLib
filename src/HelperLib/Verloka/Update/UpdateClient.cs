@@ -6,38 +6,18 @@ using System.Text;
 
 namespace Verloka.HelperLib.Update
 {
-    /// <summary>
-    /// Client for check update information
-    /// </summary>
     public class UpdateClient : IDisposable
     {
-        /// <summary>
-        /// Event when new version of application is ready
-        /// </summary>
         public event Action<UpdateItem> NewVersion;
-        /// <summary>
-        /// Simple WebException if cant download update information from server
-        /// </summary>
         public event Action<WebException> WebException;
-
-        /// <summary>
-        /// Url address of update information
-        /// </summary>
+        
         public string Url { get; set; }
-
-        /// <summary>
-        /// Initializes an object of UpdateClient
-        /// </summary>
-        /// <param name="Url">Url address of update information</param>
+        
         public UpdateClient(string Url)
         {
             this.Url = Url;
         }
-
-        /// <summary>
-        /// Initializes check updates
-        /// </summary>
-        /// <param name="v">Current application version</param>
+        
         public void Check(Version v)
         {
             using (var webClient = new WebClient())
@@ -56,13 +36,7 @@ namespace Verloka.HelperLib.Update
                 }
             }
         }
-
-        /// <summary>
-        /// Deserialize json string to object
-        /// </summary>
-        /// <typeparam name="T">Type which will be deserialize</typeparam>
-        /// <param name="json">Json string</param>
-        /// <returns>The object after deserialize</returns>
+        
         public static T Deserialize<T>(string json)
         {
             T obj = default(T);
@@ -85,11 +59,6 @@ namespace Verloka.HelperLib.Update
 
             return obj;
         }
-        /// <summary>
-        /// Serialize the object to json
-        /// </summary>
-        /// <param name="instance">An object to be serialized</param>
-        /// <returns>Json string</returns>
         public static string Serialize(object instance)
         {
             string json = string.Empty;

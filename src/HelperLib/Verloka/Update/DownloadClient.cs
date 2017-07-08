@@ -7,19 +7,11 @@ using System.Net;
 
 namespace Verloka.HelperLib.Update
 {
-    /// <summary>
-    /// Client for downloading update files
-    /// </summary>
     public class DownloadClient : IDisposable
     {
-        /// <summary>
-        /// Event to display the change download files
-        /// </summary>
         public event Action<string, int, double> DownloadProgress;
-        /// <summary>
-        /// Event when downloading is end
-        /// </summary>
         public event Action DownloadCompleted;
+        public event Action<WebException> WebException;
 
         WebClient webClient;
         Stopwatch sw;
@@ -32,12 +24,7 @@ namespace Verloka.HelperLib.Update
         List<string> Files;
         int TotalPerc = -100;
         int FileCount = 0;
-
-        /// <summary>
-        /// Initializes an object of DownloadClient
-        /// </summary>
-        /// <param name="Files">List of files to download</param>
-        /// <param name="SavePath">Path when files need save (~temp folder as example)</param>
+        
         public DownloadClient(List<string> Files, string SavePath)
         {
             sw = new Stopwatch();
@@ -46,10 +33,7 @@ namespace Verloka.HelperLib.Update
             this.Files = Files;
             FileCount = this.Files.Count;
         }
-
-        /// <summary>
-        /// Start downloading files
-        /// </summary>
+        
         public void Start()
         {
             PrepareDownload();
@@ -69,12 +53,7 @@ namespace Verloka.HelperLib.Update
             DownloadFile(CurrentUrl, CurrentPath);
             return false;
         }
-
-        /// <summary>
-        /// Download single file
-        /// </summary>
-        /// <param name="urlAddress">Url address</param>
-        /// <param name="location">Path to save</param>
+        
         public void DownloadFile(string urlAddress, string location)
         {
             using (webClient = new WebClient())
@@ -86,7 +65,10 @@ namespace Verloka.HelperLib.Update
                 {
                     webClient.DownloadFileAsync(new Uri(urlAddress), location);
                 }
-                catch { }
+                catch (WebException e)
+                {
+                    WebException?.Invoke(e);
+                }
             }
         }
 

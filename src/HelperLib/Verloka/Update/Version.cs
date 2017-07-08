@@ -2,36 +2,18 @@
 
 namespace Verloka.HelperLib.Update
 {
-    /// <summary>
-    /// Verison information
-    /// </summary>
     [DataContract]
     public class Version
     {
-        /// <summary>
-        /// Major number
-        /// </summary>
         [DataMember]
         public int Major { get; set; }
-        /// <summary>
-        /// Minor number
-        /// </summary>
         [DataMember]
         public int Minor { get; set; }
-        /// <summary>
-        /// Revision number
-        /// </summary>
         [DataMember]
         public int Revision { get; set; }
-        /// <summary>
-        /// Build number
-        /// </summary>
         [DataMember]
         public int Build { get; set; }
-
-        /// <summary>
-        /// Initializes an object of Version
-        /// </summary>
+        
         public Version()
         {
             Major = 1;
@@ -39,13 +21,6 @@ namespace Verloka.HelperLib.Update
             Revision = 0;
             Build = 0;
         }
-        /// <summary>
-        /// Initializes an object of Version
-        /// </summary>
-        /// <param name="Major">Major number</param>
-        /// <param name="Minor">Minor number</param>
-        /// <param name="Revision">Revision number</param>
-        /// <param name="Build">Build number</param>
         public Version(int Major, int Minor, int Revision, int Build)
         {
             this.Major = Major;
@@ -53,13 +28,6 @@ namespace Verloka.HelperLib.Update
             this.Revision = Revision;
             this.Build = Build;
         }
-        /// <summary>
-        /// Initializes an object of Version
-        /// </summary>
-        /// <param name="Major">Major number</param>
-        /// <param name="Minor">Minor number</param>
-        /// <param name="Revision">Revision number</param>
-        /// <param name="Build">Build number</param>
         public Version(string Major, string Minor, string Revision, string Build)
         {
             int i = 0;
@@ -78,7 +46,7 @@ namespace Verloka.HelperLib.Update
 
         public override string ToString()
         {
-            return $"{Major},{Minor},{Revision},{Build}";
+            return $"{Major}.{Minor}.{Revision}.{Build}";
         }
         public override bool Equals(object obj)
         {
@@ -101,16 +69,35 @@ namespace Verloka.HelperLib.Update
 
         public static bool operator >(Version a, Version b)
         {
+            //Major
             if (a.Major > b.Major)
                 return true;
-            else if (a.Minor > b.Minor)
-                return true;
-            else if (a.Revision > b.Revision)
-                return true;
-            else if (a.Build > b.Build)
-                return true;
-            else
+
+            if (a.Major < b.Major)
                 return false;
+
+            //Minor
+            if (a.Minor > b.Minor)
+                return true;
+
+            if (a.Minor < b.Minor)
+                return false;
+
+            //Build
+            if (a.Build > b.Build)
+                return true;
+
+            if (a.Build < b.Build)
+                return false;
+
+            //Revision
+            if (a.Revision > b.Revision)
+                return true;
+
+            if (a.Revision < b.Revision)
+                return false;
+
+            return false;
         }
         public static bool operator <(Version a, Version b)
         {
@@ -123,9 +110,9 @@ namespace Verloka.HelperLib.Update
                 return true;
             else if (a.Minor >= b.Minor)
                 return true;
-            else if (a.Revision >= b.Revision)
-                return true;
             else if (a.Build >= b.Build)
+                return true;
+            else if (a.Revision >= b.Revision)
                 return true;
             else
                 return false;
