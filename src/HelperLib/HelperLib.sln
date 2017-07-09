@@ -1,11 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26430.14
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelperLib", "HelperLib.csproj", "{243AE53E-B468-4498-A190-2BC835477F2C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelperLibTestApp", "..\HelperLibTestApp\HelperLibTestApp.csproj", "{F42E0EF7-183C-4257-980C-468ACBC65FBA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Apps", "Apps", "{D28362D8-018D-4996-9430-02B8CA00AF99}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "INIApp", "..\INIApp\INIApp.csproj", "{1565B8BB-7D26-446A-9F1E-A3B4048B7AD1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,8 +25,15 @@ Global
 		{F42E0EF7-183C-4257-980C-468ACBC65FBA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F42E0EF7-183C-4257-980C-468ACBC65FBA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F42E0EF7-183C-4257-980C-468ACBC65FBA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1565B8BB-7D26-446A-9F1E-A3B4048B7AD1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1565B8BB-7D26-446A-9F1E-A3B4048B7AD1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1565B8BB-7D26-446A-9F1E-A3B4048B7AD1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1565B8BB-7D26-446A-9F1E-A3B4048B7AD1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{1565B8BB-7D26-446A-9F1E-A3B4048B7AD1} = {D28362D8-018D-4996-9430-02B8CA00AF99}
 	EndGlobalSection
 EndGlobal

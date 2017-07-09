@@ -43,15 +43,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Verloka\INI\INIFile.cs" />
-    <Compile Include="Verloka\Localization\Language.cs" />
-    <Compile Include="Verloka\Localization\Manager.cs" />
-    <Compile Include="Verloka\Settings\ISettingStruct.cs" />
-    <Compile Include="Verloka\Settings\RegSettings.cs" />
-    <Compile Include="Verloka\Update\DownloadClient.cs" />
-    <Compile Include="Verloka\Update\UpdateClient.cs" />
-    <Compile Include="Verloka\Update\UpdateItem.cs" />
-    <Compile Include="Verloka\Update\Version.cs" />
+    <Compile Include="INI\INIFile.cs" />
+    <Compile Include="Localization\Language.cs" />
+    <Compile Include="Localization\Manager.cs" />
+    <Compile Include="Settings\ISettingStruct.cs" />
+    <Compile Include="Settings\RegSettings.cs" />
+    <Compile Include="Update\DownloadClient.cs" />
+    <Compile Include="Update\UpdateClient.cs" />
+    <Compile Include="Update\UpdateItem.cs" />
+    <Compile Include="Update\Version.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="HelperLib.nuspec" />
