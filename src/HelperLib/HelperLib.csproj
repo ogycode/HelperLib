@@ -42,6 +42,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="INI\Content.cs" />
+    <Compile Include="INI\Section.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="INI\INIFile.cs" />
     <Compile Include="Localization\Language.cs" />

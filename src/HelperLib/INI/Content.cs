@@ -1,0 +1,94 @@
+﻿using System;
+using System.Collections.Generic;
+
+namespace Verloka.HelperLib.INI
+{
+    public class Content
+    {
+        public event Action Saving;
+
+        public List<Section> Sections { get; private set; }
+        public Section Root
+        {
+            get
+            {
+                if (Sections.Count != 0)
+                    return Sections[0];
+                return null;
+            }
+        }
+
+        public Content()
+        {
+            Sections = new List<Section>();
+            Sections.Add(new Section());
+        }
+
+        public bool Write<T>(string key, T value)
+        {
+            if (string.IsNullOrWhiteSpace(key) || value == null)
+                return false;
+
+            string[] part = key.Split('.');
+            if (string.IsNullOrWhiteSpace(part[0]))
+                return Root.Add(key, value);
+
+            Section sec = GetSection(part[0]);
+
+            if (sec != null)
+                return sec.Add(part[1], value);
+
+            sec = new Section(part[0]);
+            Sections.Add(sec);
+
+            return sec.Add(part[1], value);
+        }
+        public bool Remove(string key)
+        {
+            if (string.IsNullOrWhiteSpace(key))
+                return false;
+
+            string[] part = key.Split('.');
+            if (string.IsNullOrWhiteSpace(part[0]))
+                return Root.Remove(key);
+
+            return GetSection(part[0]).Remove(part[1]);
+        }
+        public T Read<T>(string key)
+        {
+            if (string.IsNullOrWhiteSpace(key))
+                return default(T);
+
+            string[] part = key.Split('.');
+            if (string.IsNullOrWhiteSpace(part[0]))
+                if (Root.GetContent().ContainsKey(key))
+                    return Root.Get<T>(part[1]);
+
+            return GetSection(part[0]).Get<T>(part[1]);
+        }
+        public bool ContainsKey(string key)
+        {
+            foreach (var item in Sections)
+                if (item.GetContent().ContainsKey(key))
+                    return true;
+            return false;
+        }
+        public Section GetSection(string Name)
+        {
+            if (string.IsNullOrWhiteSpace(Name))
+                return Root;
+
+            foreach (var item in Sections)
+                if (item.Name == Name)
+                    return item;
+
+            return null;
+        }
+        public IDictionary<string, object> ToDictionary()
+        {
+            Dictionary<string, object> dic = new Dictionary<string, object>();
+
+            return dic;
+        }
+    }
+}
