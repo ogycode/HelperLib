@@ -1,6 +1,7 @@
 ﻿using Microsoft.Win32;
 using System;
 using System.Linq;
+using System.Text;
 using System.Windows;
 
 namespace INIApp
@@ -23,7 +24,23 @@ namespace INIApp
         }
         void OpenFile(string name)
         {
-            iniFile = new Verloka.HelperLib.INI.INIFile(name);
+            if(string.IsNullOrWhiteSpace(tbSeparator.Text))
+            {
+                lblStatus.Content = "Separator can not be empty!";
+                return;
+            }
+            if (string.IsNullOrWhiteSpace(tbComment.Text))
+            {
+                lblStatus.Content = "Comment can not be empty!";
+                return;
+            }
+            if(string.IsNullOrWhiteSpace(tbLeftB.Text) || string.IsNullOrWhiteSpace(tbRightB.Text))
+            {
+                lblStatus.Content = "Bracket can not be empty!";
+                return;
+            }
+
+            iniFile = new Verloka.HelperLib.INI.INIFile(name, tbSeparator.Text, tbComment.Text, tbLeftB.Text, tbRightB.Text, Encoding.UTF8);
             tbFilePath.Text = name;
             lblStatus.Content = $"File \'{name}\' is loaded";
 
