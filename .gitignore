@@ -110,3 +110,4 @@ UpgradeLog*.XML
 
 src/.vs/
 src/Windows/.vs/
+src/Windows/HelperLib/.vs/
