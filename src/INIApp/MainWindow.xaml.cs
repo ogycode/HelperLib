@@ -21,7 +21,36 @@ namespace INIApp
   
             lvItems.ItemsSource = iniFile?.ToDictionary();
         }
+        void OpenFile(string name)
+        {
+            iniFile = new Verloka.HelperLib.INI.INIFile(name);
+            tbFilePath.Text = name;
+            lblStatus.Content = $"File \'{name}\' is loaded";
 
+            cbSections.Items?.Clear();
+            cbSections.Items.Add("--All--");
+            foreach (var item in iniFile.Sections)
+                cbSections.Items.Add(item.Name);
+            cbSections.SelectedIndex = 0;
+            cbSections.SelectionChanged += CbSectionsSelectionChanged;
+
+            SetList();
+        }
+
+        private void CbSectionsSelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            switch (cbSections.SelectedIndex)
+            {
+                case -1:
+                    return;
+                case 0:
+                    SetList();
+                    break;
+                default:
+                    lvItems.ItemsSource = iniFile[cbSections.SelectedItem.ToString()].GetPureContent();
+                    break;
+            }
+        }
         private void btnBrowseClick(object sender, RoutedEventArgs e)
         {
             OpenFileDialog ofd = new OpenFileDialog();
@@ -36,9 +65,7 @@ namespace INIApp
             {
                 try
                 {
-                    iniFile = new Verloka.HelperLib.INI.INIFile(ofd.FileName);
-                    tbFilePath.Text = ofd.FileName;
-                    SetList();
+                    OpenFile(ofd.FileName);
                 }
                 catch (Exception ex)
                 {
@@ -48,6 +75,12 @@ namespace INIApp
         }
         private void btnDeleteClick(object sender, RoutedEventArgs e)
         {
+            if(iniFile == null)
+            {
+                lblStatus.Content = "Need ini file for work!";
+                return;
+            }
+
             if(string.IsNullOrWhiteSpace(tbDeleteName.Text))
             {
                 lblStatus.Content = "Wrong name, for removing enter correct name to text box";
@@ -58,6 +91,7 @@ namespace INIApp
             {
                 lblStatus.Content = $"\'{tbDeleteName.Text}\' is removing";
                 SetList();
+                iniFile.Save();
             }
             else
                 lblStatus.Content = $"\'{tbDeleteName.Text}\' is not found in file";
@@ -66,6 +100,12 @@ namespace INIApp
         }
         private void btnAddClick(object sender, RoutedEventArgs e)
         {
+            if (iniFile == null)
+            {
+                lblStatus.Content = "Need ini file for work!";
+                return;
+            }
+
             if (string.IsNullOrWhiteSpace(tbAddKey.Text))
             {
                 lblStatus.Content = "Wrong key, for adding enter correct key to text box";
@@ -83,6 +123,7 @@ namespace INIApp
                 lblStatus.Content = $"\'{tbAddKey.Text}\' is edited";
 
             SetList();
+            iniFile.Save();
         }
         private void windowFileDrow(object sender, DragEventArgs e)
         {
@@ -106,16 +147,39 @@ namespace INIApp
 
                 try
                 {
-                    iniFile = new Verloka.HelperLib.INI.INIFile(files[0]);
-                    tbFilePath.Text = files[0];
-                    SetList();
-                    lblStatus.Content = $"File \'{files[0]}\' is loaded";
+                    OpenFile(files[0]);
                 }
                 catch (Exception ex)
                 {
                     MessageBox.Show("Error: Could not read file from disk. Original error: " + ex.Message);
                 }
             }
+        }
+        private void btnShowClick(object sender, RoutedEventArgs e)
+        {
+            if (iniFile == null)
+            {
+                lblStatus.Content = "Need ini file for work!";
+                return;
+            }
+
+            if(string.IsNullOrWhiteSpace(tbSectionName.Text))
+            {
+                lblStatus.Content = "Wrong section name, enter correct!";
+                return;
+            }
+
+            if(string.IsNullOrWhiteSpace(tbValueName.Text))
+            {
+                string value1 = iniFile.Read<string>(tbSectionName.Text);
+                lblStatus.Content = $"Value by name \'{tbSectionName.Text}\' = \'{value1}\'";
+                MessageBox.Show($"Value by name \'{tbSectionName.Text}\' = \'{value1}\'", "INI Value", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+
+            string value = iniFile[tbSectionName.Text][tbValueName.Text]?.ToString();
+            lblStatus.Content = $"Value by name \'{tbValueName.Text}\' = \'{value}\'";
+            MessageBox.Show($"Value by name \'{tbSectionName.Text}\' = \'{value}\'", "INI Value", MessageBoxButton.OK, MessageBoxImage.Information);
         }
     }
 }

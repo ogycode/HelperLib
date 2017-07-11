@@ -7,11 +7,22 @@ namespace Verloka.HelperLib.INI
         public string Name { get; private set; }
         public bool IsRoot { get; private set; }
         Dictionary<string, object> content { get; set; }
+        public object this [string key]
+        {
+            get { return Read<object>(key); }
+            set
+            {
+                if (content.ContainsKey(key))
+                    content[key] = value;
+                else
+                    Add(key, value);
+            }
+        }
 
         public Section()
         {
             IsRoot = true;
-            Name = "";
+            Name = "Root";
             content = new Dictionary<string, object>();
         }
         public Section(string Name)
@@ -21,7 +32,7 @@ namespace Verloka.HelperLib.INI
             content = new Dictionary<string, object>();
         }
 
-        public T Get<T>(string key)
+        public T Read<T>(string key)
         {
             if (content.ContainsKey(key))
                 return (T)content[key];

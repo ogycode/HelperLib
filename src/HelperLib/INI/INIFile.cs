@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace Verloka.HelperLib.INI
 {
@@ -14,6 +15,18 @@ namespace Verloka.HelperLib.INI
         public string Comment { get; private set; }
         Content content;
         public string Path { get; private set; }
+        public List<Section> Sections { get { return content?.Sections; } }
+        public Section this[string name]
+        {
+            get
+            {
+                return content[name];
+            }
+            set
+            {
+                content[name] = value;
+            }
+        }
 
         public INIFile(string path)
         {
@@ -64,6 +77,10 @@ namespace Verloka.HelperLib.INI
         {
             return content.ToDictionary();
         }
+        public void Save()
+        {
+            save(content, Path, Separator, Comment, Encoding);
+        }
 
         public static IDictionary<string, object> GetDictionary(string path)
         {
@@ -80,42 +97,51 @@ namespace Verloka.HelperLib.INI
 
         static Content read(string path, string separator, string comment, Encoding edc)
         {
-
-
-
-            /*Dictionary<string, object> dic = new Dictionary<string, object>();
+            Content con = new Content();
+            Section sec = con.Root;
 
             using (StreamReader sr = new StreamReader(File.Open(path, FileMode.Open), edc))
                 while (!sr.EndOfStream)
                 {
                     string line = sr.ReadLine();
-                    if (string.IsNullOrWhiteSpace(line))
-                        continue;
 
                     //remove comment
                     int index = line.IndexOf(comment);
                     if (index > 0)
                         line = line.Substring(0, index);
 
-                    //read node
-                    string[] kv = line.Split(separator.ToCharArray());
-                    if (kv.Length != 2)
+                    if (string.IsNullOrWhiteSpace(line))
                         continue;
 
-                    if (dic.ContainsKey(kv[0]))
-                        dic[kv[0]] = kv[1];
-                    else
-                        dic.Add(kv[0], kv[1]);
-                }*/
+                    string[] part = line.Split(separator.ToCharArray());
+                    string section = Regex.Match(line, @"\[([^)]*)\]").Groups[1].Value;
 
-            return null;
+                    if (string.IsNullOrWhiteSpace(section))
+                    {
+                        if (part.Length != 2)
+                            continue;
+
+                        sec[part[0]] = part[1];
+                    }
+                    else
+                        sec = con[section];
+                }
+            return con;
         }
-        static void save(Content cont, string path, string separator, Encoding edc, bool repeat = false)
+        static void save(Content cont, string path, string separator, string comment, Encoding edc, bool repeat = false)
         {
             try
             {
                 using (StreamWriter sw = new StreamWriter(File.Open(path, FileMode.CreateNew)))
                 {
+                    //copyright
+                    sw.WriteLine($"{comment}{new string('-', 50)}");
+                    sw.WriteLine($"{comment}INI file created by Verloka.HelperLib.INI");
+                    sw.WriteLine($"{comment}Verloka.HelperLib developed by Verloka Vadim");
+                    sw.WriteLine($"{comment}Verloka Vadim - https://verloka.github.io");
+                    sw.WriteLine($"{comment}{new string('-', 50)}\n\n");
+
+
                     foreach (var root in cont.Root.GetPureContent())
                         sw.WriteLine($"{root.Key}{separator}{root.Value}");
                     sw.WriteLine("");
@@ -138,7 +164,7 @@ namespace Verloka.HelperLib.INI
                     File.Delete(path);
 
                 if (!repeat)
-                    save(cont, path, separator, edc, true);
+                    save(cont, path, separator, comment, edc, true);
             }
         }
     }

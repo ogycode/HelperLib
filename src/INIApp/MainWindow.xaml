@@ -7,11 +7,11 @@
         Title="Verloka.HelperLib.INI" 
         Background="LightGray"
         MinWidth="800"
-        MinHeight="400"
+        MinHeight="500"
         Width="800"
-        Height="400" 
+        Height="500" 
         Drop="windowFileDrow"
-        AllowDrop="True">
+        AllowDrop="True" Icon="favicon.ico">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
@@ -22,13 +22,32 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
         <TextBox x:Name="tbFilePath" Grid.Column="0" Grid.Row="0" VerticalAlignment="Top" Margin="5" Height="24" FontSize="14" Text="Path to ini file..." IsReadOnly="True" VerticalContentAlignment="Center" TextWrapping="NoWrap"/>
         <Button x:Name="btnBrowse" Content="Browse" Grid.Column="1" Grid.Row="0" Margin="5" Width="100" VerticalAlignment="Top" HorizontalAlignment="Center" Height="24" Click="btnBrowseClick"/>
         <ScrollViewer Grid.Row="1" Grid.ColumnSpan="2" Margin="5,0,0,0">
             <ListView x:Name="lvItems" Background="{x:Null}" Foreground="Black" Margin="5,0,0,75" BorderThickness="0"/>
         </ScrollViewer>
-        <Grid Grid.ColumnSpan="2" Grid.Row="2" Background="Gray" VerticalAlignment="Center">
+        <Grid Grid.Row="2" Grid.ColumnSpan="2" Background="Gray">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width=".7*"/>
+                <ColumnDefinition Width=".7*"/>
+                <ColumnDefinition Width=".7*"/>
+                <ColumnDefinition Width="auto"/>
+            </Grid.ColumnDefinitions>
+            <Label Content="Show section:" Grid.Row="0" Grid.Column="0" Foreground="White" Margin="5" FontSize="16"/>
+            <ComboBox x:Name="cbSections" Grid.Column="0" Grid.Row="1" Margin="5"/>
+            <Label Content="Show value by section's and value's name:" Grid.Row="0" Grid.Column="1" Foreground="White" Margin="5" FontSize="16" Grid.ColumnSpan="3"/>
+            <TextBox x:Name="tbSectionName" Margin="5" Height="24" FontSize="14" Text="Section name" Grid.Column="1" Grid.Row="1" VerticalContentAlignment="Center" TextWrapping="NoWrap"/>
+            <TextBox x:Name="tbValueName" Margin="5" Height="24" FontSize="14" Text="Value name" Grid.Column="2" Grid.Row="1" VerticalContentAlignment="Center" TextWrapping="NoWrap"/>
+            <Button x:Name="btnShow" Content="Show" Height="24" Margin="5" Grid.Column="3" Grid.Row="1" Width="100" Click="btnShowClick"/>
+        </Grid>
+        <Grid Grid.ColumnSpan="2" Grid.Row="3" Background="Gray" VerticalAlignment="Center">
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="*"/>
@@ -47,7 +66,7 @@
                     <ColumnDefinition Width="auto"/>
                 </Grid.ColumnDefinitions>
                 <TextBox x:Name="tbAddKey" Margin="5" Height="24" FontSize="14" Text="Key" Grid.Column="0" VerticalContentAlignment="Center" TextWrapping="NoWrap"/>
-                <Label Content="=" Grid.Column="1" Foreground="White" Padding="5" FontSize="16" Background="Gray"/>
+                <Label Content="=" Grid.Column="1" Foreground="White" Padding="5" FontSize="16"/>
                 <TextBox x:Name="tbAddValue" Margin="5" Height="24" FontSize="14" Text="Value" Grid.Column="2" VerticalContentAlignment="Center" TextWrapping="NoWrap"/>
                 <Button x:Name="btnAdd" Content="Add" Height="24" Margin="5" Grid.Column="3" Width="100" Click="btnAddClick"/>
             </Grid>
@@ -60,6 +79,6 @@
                 <Button x:Name="btnDelete" Content="Delete" Height="24" Margin="5" Grid.Column="1" Width="100" Click="btnDeleteClick"/>
             </Grid>
         </Grid>
-        <Label x:Name="lblStatus" Content="Ready" Grid.Row="3" Grid.ColumnSpan="2" Foreground="White" Padding="5" FontSize="16" Background="Gray"/>
+        <Label x:Name="lblStatus" Content="Ready" Grid.Row="4" Grid.ColumnSpan="2" Foreground="White" Padding="5" FontSize="16" Background="Gray"/>
     </Grid>
 </Window>
