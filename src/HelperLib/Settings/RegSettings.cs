@@ -44,7 +44,7 @@ namespace Verloka.HelperLib.Settings
         public object SetValue<T>(string name, T value)
         {
             string obj;
-            if (value != null)
+            if (!Equals(value, default(T)))
                 obj = value is ISettingStruct ? (value as ISettingStruct).GetValue() : value.ToString();
             else
                 obj = "";
@@ -57,7 +57,7 @@ namespace Verloka.HelperLib.Settings
             if (value is ISettingStruct)
                 KeyCustom.SetValue(name, (value as ISettingStruct).GetValue());
             else
-                Key.SetValue(name, (value == null) ? new object() : value);
+                Key.SetValue(name, Equals(value, default(T)) ? new object() : value);
 
             return value;
         }

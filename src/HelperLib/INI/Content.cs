@@ -45,7 +45,7 @@ namespace Verloka.HelperLib.INI
 
         public bool Write<T>(string key, T value)
         {
-            if (string.IsNullOrWhiteSpace(key) || value == null)
+            if (string.IsNullOrWhiteSpace(key) || Equals(value, default(T)))
                 return false;
 
             string[] part = key.Split('.');
