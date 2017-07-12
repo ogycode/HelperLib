@@ -1,4 +1,6 @@
-﻿namespace Verloka.HelperLib.Localization
+﻿using System.Collections.Generic;
+
+namespace Verloka.HelperLib.Localization
 {
     public struct Language
     {

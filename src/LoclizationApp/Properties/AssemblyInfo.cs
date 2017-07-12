@@ -7,13 +7,13 @@ using System.Windows;
 // Общие сведения об этой сборке предоставляются следующим набором
 // набора атрибутов. Измените значения этих атрибутов, чтобы изменить сведения,
 // связанные со сборкой.
-[assembly: AssemblyTitle("LoclizationApp")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("Locales Editor")]
+[assembly: AssemblyDescription("App for edit and create locales for my applications")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("LoclizationApp")]
-[assembly: AssemblyCopyright("Copyright ©  2017")]
-[assembly: AssemblyTrademark("")]
+[assembly: AssemblyCompany("Verloka")]
+[assembly: AssemblyProduct("Locales Editor")]
+[assembly: AssemblyCopyright("Copyright © Verloka Vadim 2017")]
+[assembly: AssemblyTrademark("Verloka")]
 [assembly: AssemblyCulture("")]
 
 // Установка значения False для параметра ComVisible делает типы в этой сборке невидимыми

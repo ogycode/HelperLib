@@ -63,7 +63,16 @@ namespace Verloka.HelperLib.INI
                 return false;
         }
 
-        public Dictionary<string, object> GetContent()
+        public IList<string> GetKeys()
+        {
+            List<string> keys = new List<string>();
+
+            foreach (var item in content.Keys)
+                keys.Add(item);
+
+            return keys;
+        }
+        public IDictionary<string, object> GetContent()
         {
             if (IsRoot)
                 return content;
@@ -75,7 +84,7 @@ namespace Verloka.HelperLib.INI
 
             return dic;
         }
-        public Dictionary<string, object> GetPureContent()
+        public IDictionary<string, object> GetPureContent()
         {
             if (IsRoot)
                 return content;

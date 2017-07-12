@@ -102,5 +102,11 @@
   <ItemGroup>
     <Resource Include="uk.ico" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\HelperLib\HelperLib.csproj">
+      <Project>{243ae53e-b468-4498-a190-2bc835477f2c}</Project>
+      <Name>HelperLib</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

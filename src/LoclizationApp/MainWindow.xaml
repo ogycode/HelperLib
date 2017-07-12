@@ -4,12 +4,16 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="Local Editor" 
+        Title="Locales Editor" 
         MinHeight="600" 
         MinWidth="800"
         Height="600" 
         Width="800"
-        Background="LightGoldenrodYellow" Icon="uk.ico" WindowStartupLocation="CenterScreen">
+        Background="LightGoldenrodYellow" 
+        Icon="uk.ico" 
+        WindowStartupLocation="CenterScreen"
+        Drop="windowFileDrow"
+        AllowDrop="True">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
@@ -19,6 +23,7 @@
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
@@ -36,14 +41,12 @@
             <ComboBox Margin="5" Grid.Column="0" Grid.Row="1"/>
             <Label Content="Display locales:" Grid.Row="0" Grid.Column="1" Foreground="Black" Margin="5" FontSize="16" />
             <ComboBox Margin="5" Grid.Column="1" Grid.Row="1"/>
-            <Label Content="Local Editor 1.0.0.0 by Verloka Vadim" Grid.Row="0" Grid.Column="2" Foreground="Black" Margin="5" FontSize="16" HorizontalContentAlignment="Right" />
+            <Label Content="Locales Editor 1.0.0.0 by Verloka Vadim" Grid.Row="0" Grid.Column="2" Foreground="Black" Margin="5" FontSize="16" HorizontalContentAlignment="Right" />
             <Label Content="https://verloka.github.io" Grid.Row="1" Grid.Column="2" Foreground="Black" Margin="5" FontSize="10" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" />
         </Grid>
         <TextBox x:Name="tbFilePath" Grid.Column="0" Grid.Row="1" VerticalAlignment="Top" Margin="5,5,5,0" Height="24" FontSize="14" Text="Path to local file..." IsReadOnly="True" VerticalContentAlignment="Center" TextWrapping="NoWrap"/>
         <Button x:Name="btnBrowse" Content="Browse" Grid.Column="1" Grid.Row="1" Margin="5" Width="100" VerticalAlignment="Top" HorizontalAlignment="Center" Height="24"/>
-        <ScrollViewer Grid.Row="2" Grid.ColumnSpan="2">
-            <DataGrid Background="{x:Null}" BorderBrush="{x:Null}" BorderThickness="0" />
-        </ScrollViewer>
+        <DataGrid x:Name="dgData" Grid.Row="2" Grid.ColumnSpan="2" Background="{x:Null}" BorderBrush="{x:Null}" BorderThickness="0" AllowDrop="True" SelectionMode="Single" AutoGenerateColumns="False" CanUserReorderColumns="False" MinColumnWidth="50" HorizontalGridLinesBrush="Gray" VerticalGridLinesBrush="Gray" AlternatingRowBackground="LightGoldenrodYellow" RowBackground="PaleGoldenrod" CellEditEnding="dgDataCellEditEnding" BeginningEdit="dgDataEditBegin" />
         <Grid Grid.Row="3" Grid.ColumnSpan="2" Background="PaleGoldenrod">
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto"/>
@@ -83,5 +86,6 @@
             <ComboBox Margin="5" Grid.Column="3" Grid.Row="1"/>
             <Button x:Name="btnRemoveLocal" Content="Remov local" Grid.Column="4" Grid.Row="1" Margin="5" Width="100" VerticalAlignment="Top" HorizontalAlignment="Center" Height="24"/>
         </Grid>
+        <Label x:Name="lblStatus" Content="Ready" Grid.Row="5" Grid.ColumnSpan="2" Foreground="Black" Padding="5" FontSize="16" Background="PaleGoldenrod"/>
     </Grid>
 </Window>

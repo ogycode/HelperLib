@@ -35,7 +35,7 @@ namespace Verloka.HelperLib.Localization
 
         public void Load()
         {
-            if(!File.Exists(Path))
+            if (!File.Exists(Path))
             {
                 LoadError?.Invoke($"File {Path} not found!");
                 return;
@@ -44,7 +44,7 @@ namespace Verloka.HelperLib.Localization
             file = new INI.INIFile(Path, "=", ";", System.Text.Encoding.UTF8);
 
             foreach (var item in file.Sections)
-                if(!item.IsRoot)
+                if (!item.IsRoot)
                 {
                     Language l = new Language() { Name = item.Name, Code = item["code"].ToString() };
                     AvailableLanguages.Add(l);
@@ -52,8 +52,13 @@ namespace Verloka.HelperLib.Localization
         }
         public void SetCurrent(string code)
         {
-            Current = AvailableLanguages.Single(l => l.Code == code);
+            Current = AvailableLanguages.SingleOrDefault(l => l.Code == code);
             LanguageChanged?.Invoke(this);
+        }
+        public List<string> Keys() => file.Sections.Count > 1 ? (List<string>)file.Sections[1].GetKeys() : new List<string>();
+        public string GetValueByLanguage(string lang, string name)
+        {
+            return file[lang][name].ToString();
         }
     }
 }
