@@ -50,6 +50,9 @@ namespace Verloka.HelperLib.Update
         }
         public override bool Equals(object obj)
         {
+            if (obj == null)
+                return false;
+
             return (obj as Version).Major == Major && (obj as Version).Minor == Minor && 
                 (obj as Version).Revision == Revision && (obj as Version).Build == Build;
         }
@@ -60,6 +63,9 @@ namespace Verloka.HelperLib.Update
 
         public static bool operator ==(Version a, Version b)
         {
+            if (a == null || b == null)
+                return false;
+
             return a.Major == b.Major && a.Minor == b.Minor && a.Revision == b.Revision && a.Build == b.Build;
         }
         public static bool operator !=(Version a, Version b)

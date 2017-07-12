@@ -161,7 +161,8 @@ namespace Verloka.HelperLib.Settings
                     settings = null;
                 }
 
-                Key.Close();
+                Key?.Close();
+                KeyCustom?.Close();
 
                 disposedValue = true;
             }
