@@ -20,7 +20,7 @@ namespace INIApp
             if (iniFile == null)
                 return;
   
-            lvItems.ItemsSource = iniFile?.ToDictionary();
+            lvItems.ItemsSource = iniFile.ToDictionary();
         }
         void OpenFile(string name)
         {
