@@ -11,7 +11,7 @@
         Width="800"
         Height="500" 
         Drop="windowFileDrow"
-        AllowDrop="True" Icon="favicon.ico">
+        AllowDrop="True" Icon="favicon.ico" WindowStartupLocation="CenterScreen">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
@@ -51,10 +51,7 @@
         </Grid>
         <TextBox x:Name="tbFilePath" Grid.Column="0" Grid.Row="1" VerticalAlignment="Top" Margin="5" Height="24" FontSize="14" Text="Path to ini file..." IsReadOnly="True" VerticalContentAlignment="Center" TextWrapping="NoWrap"/>
         <Button x:Name="btnBrowse" Content="Browse" Grid.Column="1" Grid.Row="1" Margin="5" Width="100" VerticalAlignment="Top" HorizontalAlignment="Center" Height="24" Click="btnBrowseClick"/>
-        <Image Grid.Row="2" Grid.ColumnSpan="2" Source="ini.png" Opacity="0.2" HorizontalAlignment="Center" MaxWidth="512" MaxHeight="512"/>
-        <ScrollViewer Grid.Row="2" Grid.ColumnSpan="2" Margin="5,0,0,0">
-            <ListView x:Name="lvItems" Background="{x:Null}" Foreground="Black" Margin="5,0,0,0" BorderThickness="0"/>
-        </ScrollViewer>
+        <ListView x:Name="lvItems" Background="{x:Null}" Foreground="Black" Grid.Row="2" Grid.ColumnSpan="2" Margin="5,0,0,0" BorderThickness="0"/>
         <Grid Grid.Row="4" Grid.ColumnSpan="2" Background="Gray">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
