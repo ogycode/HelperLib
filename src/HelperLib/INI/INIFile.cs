@@ -90,7 +90,11 @@ namespace Verloka.HelperLib.INI
         }
         public bool Remove(string key)
         {
-            return content.Remove(key);
+            return content.RemoveNode(key);
+        }
+        public bool RemoveSection(string name)
+        {
+            return content.RemoveSection(name);
         }
         public IDictionary<string, object> ToDictionary()
         {

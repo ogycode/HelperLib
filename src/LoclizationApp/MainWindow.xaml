@@ -37,16 +37,16 @@
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
-            <Label Content="Main local:" Grid.Row="0" Grid.Column="0" Foreground="Black" Margin="5" FontSize="16" />
-            <ComboBox Margin="5" Grid.Column="0" Grid.Row="1"/>
+            <Label Content="Main locale:" Grid.Row="0" Grid.Column="0" Foreground="Black" Margin="5" FontSize="16" />
+            <ComboBox x:Name="cbMainLocal" Margin="5" Grid.Column="0" Grid.Row="1"/>
             <Label Content="Display locales:" Grid.Row="0" Grid.Column="1" Foreground="Black" Margin="5" FontSize="16" />
-            <ComboBox Margin="5" Grid.Column="1" Grid.Row="1"/>
+            <ComboBox x:Name="cbLocales" Margin="5" Grid.Column="1" Grid.Row="1"/>
             <Label Content="Locales Editor 1.0.0.0 by Verloka Vadim" Grid.Row="0" Grid.Column="2" Foreground="Black" Margin="5" FontSize="16" HorizontalContentAlignment="Right" />
             <Label Content="https://verloka.github.io" Grid.Row="1" Grid.Column="2" Foreground="Black" Margin="5" FontSize="10" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" />
         </Grid>
         <TextBox x:Name="tbFilePath" Grid.Column="0" Grid.Row="1" VerticalAlignment="Top" Margin="5,5,5,0" Height="24" FontSize="14" Text="Path to local file..." IsReadOnly="True" VerticalContentAlignment="Center" TextWrapping="NoWrap"/>
-        <Button x:Name="btnBrowse" Content="Browse" Grid.Column="1" Grid.Row="1" Margin="5" Width="100" VerticalAlignment="Top" HorizontalAlignment="Center" Height="24"/>
-        <DataGrid x:Name="dgData" Grid.Row="2" Grid.ColumnSpan="2" Background="{x:Null}" BorderBrush="{x:Null}" BorderThickness="0" AllowDrop="True" SelectionMode="Single" AutoGenerateColumns="False" CanUserReorderColumns="False" MinColumnWidth="50" HorizontalGridLinesBrush="Gray" VerticalGridLinesBrush="Gray" AlternatingRowBackground="LightGoldenrodYellow" RowBackground="PaleGoldenrod" CellEditEnding="dgDataCellEditEnding" BeginningEdit="dgDataEditBegin" />
+        <Button x:Name="btnBrowse" Content="Browse" Grid.Column="1" Grid.Row="1" Margin="5" Width="100" VerticalAlignment="Top" HorizontalAlignment="Center" Height="24" Click="btnBrowseClick"/>
+        <DataGrid x:Name="dgData" Grid.Row="2" Grid.ColumnSpan="2" Background="{x:Null}" BorderBrush="{x:Null}" BorderThickness="0" AllowDrop="True" SelectionMode="Single" AutoGenerateColumns="False" CanUserReorderColumns="False" MinColumnWidth="50" VerticalGridLinesBrush="LightGray" AlternatingRowBackground="LightGoldenrodYellow" RowBackground="PaleGoldenrod" CellEditEnding="dgDataCellEditEnding" BeginningEdit="dgDataEditBegin" GridLinesVisibility="Vertical" CanUserAddRows="false" />
         <Grid Grid.Row="3" Grid.ColumnSpan="2" Background="PaleGoldenrod">
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto"/>
@@ -58,10 +58,10 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="auto"/>
             </Grid.ColumnDefinitions>
-            <Label Content="Adding node to all locales:" Grid.Row="0" Grid.Column="0" Foreground="Black" Margin="5" FontSize="16" />
+            <Label Content="Adding key to all locales:" Grid.Row="0" Grid.Column="0" Foreground="Black" Margin="5" FontSize="16" />
             <TextBox x:Name="tbNodeAddName" Grid.Row="1" Grid.Column="0" VerticalAlignment="Top" Margin="5" Height="24" FontSize="14" Text="Name" VerticalContentAlignment="Center" TextWrapping="NoWrap"/>
-            <Button x:Name="btnAddNode" Content="Add node" Grid.Row="1" Grid.Column="1" Margin="5" Width="100" VerticalAlignment="Top" HorizontalAlignment="Center" Height="24"/>
-            <Label Content="Removing node from all locales:" Grid.Row="0" Grid.Column="2" Foreground="Black" Margin="5" FontSize="16" />
+            <Button x:Name="btnAddNode" Content="Add node" Grid.Row="1" Grid.Column="1" Margin="5" Width="100" VerticalAlignment="Top" HorizontalAlignment="Center" Height="24" Click="btnAddNodeClick"/>
+            <Label Content="Removing key from all locales:" Grid.Row="0" Grid.Column="2" Foreground="Black" Margin="5" FontSize="16" />
             <TextBox x:Name="tbNodeRemoveName" Grid.Row="1" Grid.Column="2" VerticalAlignment="Top" Margin="5" Height="24" FontSize="14" Text="Name" VerticalContentAlignment="Center" TextWrapping="NoWrap"/>
             <Button x:Name="btnRemoveNode" Content="Remove node" Grid.Row="1" Grid.Column="3" Margin="5" Width="100" VerticalAlignment="Top" HorizontalAlignment="Center" Height="24"/>
         </Grid>
@@ -77,14 +77,14 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="auto"/>
             </Grid.ColumnDefinitions>
-            <Label Content="Local name:" Grid.Row="0" Grid.Column="0" Foreground="Black" Margin="5" FontSize="16" />
+            <Label Content="Adding, locale name:" Grid.Row="0" Grid.Column="0" Foreground="Black" Margin="5" FontSize="16" />
             <TextBox x:Name="tbLocName" Grid.Column="0" Grid.Row="1" VerticalAlignment="Top" Margin="5" Height="24" FontSize="14" Text="Name" VerticalContentAlignment="Center" TextWrapping="NoWrap"/>
-            <Label Content="Local code:" Grid.Row="0" Grid.Column="1" Foreground="Black" Margin="5" FontSize="16" />
+            <Label Content="Locale code:" Grid.Row="0" Grid.Column="1" Foreground="Black" Margin="5" FontSize="16" />
             <TextBox x:Name="tbLocCode" Grid.Column="1" Grid.Row="1" VerticalAlignment="Top" Margin="5" Height="24" FontSize="14" Text="Code" VerticalContentAlignment="Center" TextWrapping="NoWrap"/>
             <Button x:Name="btnAddLocal" Content="Add local" Grid.Column="2" Grid.Row="1" Margin="5" Width="100" VerticalAlignment="Top" HorizontalAlignment="Center" Height="24"/>
-            <Label Content="Local for removing:" Grid.Row="0" Grid.Column="3" Foreground="Black" Margin="5" FontSize="16" />
-            <ComboBox Margin="5" Grid.Column="3" Grid.Row="1"/>
-            <Button x:Name="btnRemoveLocal" Content="Remov local" Grid.Column="4" Grid.Row="1" Margin="5" Width="100" VerticalAlignment="Top" HorizontalAlignment="Center" Height="24"/>
+            <Label Content="Locale for removing:" Grid.Row="0" Grid.Column="3" Foreground="Black" Margin="5" FontSize="16" />
+            <ComboBox x:Name="cbRemovingLocal" Margin="5" Grid.Column="3" Grid.Row="1"/>
+            <Button x:Name="btnRemoveLocal" Content="Remov local" Grid.Column="4" Grid.Row="1" Margin="5" Width="100" VerticalAlignment="Top" HorizontalAlignment="Center" Height="24" Click="btnRemoveLocalClick"/>
         </Grid>
         <Label x:Name="lblStatus" Content="Ready" Grid.Row="5" Grid.ColumnSpan="2" Foreground="Black" Padding="5" FontSize="16" Background="PaleGoldenrod"/>
     </Grid>

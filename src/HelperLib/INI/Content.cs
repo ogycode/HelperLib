@@ -63,7 +63,7 @@ namespace Verloka.HelperLib.INI
 
             return sec.Add(part[1], value);
         }
-        public bool Remove(string key)
+        public bool RemoveNode(string key)
         {
             if (string.IsNullOrWhiteSpace(key))
                 return false;
@@ -74,6 +74,20 @@ namespace Verloka.HelperLib.INI
                 return Root.Remove(key);
 
             return GetSection(part[0]).Remove(part[1]);
+        }
+        public bool RemoveSection(string key)
+        {
+            if (string.IsNullOrWhiteSpace(key) || key == "Root")
+                return false;
+
+            var sec = Sections.Find(s => s.Name == key);
+
+            if (sec == null)
+                return false;
+
+            Sections.Remove(sec);
+
+            return true;
         }
         public T Read<T>(string key)
         {

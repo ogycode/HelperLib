@@ -42,7 +42,12 @@ namespace Verloka.HelperLib.Localization
             }
 
             file = new INI.INIFile(Path, "=", ";", System.Text.Encoding.UTF8);
-
+            UpdateAvailableLanguages();
+            SetCurrent(file.Read<string>("current"));
+        }
+        public void UpdateAvailableLanguages()
+        {
+            AvailableLanguages.Clear();
             foreach (var item in file.Sections)
                 if (!item.IsRoot)
                 {
@@ -59,6 +64,22 @@ namespace Verloka.HelperLib.Localization
         public string GetValueByLanguage(string lang, string name)
         {
             return file[lang][name].ToString();
+        }
+        public void AddNode(string key)
+        {
+            foreach (var item in file.Sections)
+                if (!item.IsRoot)
+                    item.Add(key, "");
+        }
+        public bool RemoveKey(string key)
+        {
+            return true;
+        }
+        public bool RemoveLocale(string name)
+        {
+            bool b = file.RemoveSection(name);
+            UpdateAvailableLanguages();
+            return b;
         }
     }
 }

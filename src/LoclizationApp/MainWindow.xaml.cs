@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -20,10 +21,14 @@ namespace LoclizationApp
     public partial class MainWindow : Window
     {
         Manager lang;
+        List<List<string>> data;
 
         public MainWindow()
         {
             InitializeComponent();
+
+            data = new List<List<string>>();
+            dgData.ItemsSource = data;
         }
 
         void OpenFile(string name)
@@ -31,7 +36,8 @@ namespace LoclizationApp
             lang = new Manager(name);
             lang.Load();
 
-            lblStatus.Content = $"File \'{name}\' loaded";
+            lblStatus.Content = $"File \'{name}\' loaded ({DateTime.Now.ToLongTimeString()})";
+            tbFilePath.Text = name;
 
             SetData();
         }
@@ -40,9 +46,11 @@ namespace LoclizationApp
             if (lang == null)
                 return;
 
-            //TODO CLEAR OLD DATA FROM TABLE
-
             int columnNumber = 0;
+
+            //for reload data need delete
+            dgData.Columns.Clear();
+            data.Clear();
 
             //keys
             DataGridTextColumn keyHead = new DataGridTextColumn();
@@ -63,8 +71,6 @@ namespace LoclizationApp
 
             List<string> keys = lang.Keys();
 
-            List<List<string>> data = new List<List<string>>();
-
             for (int i = 0; i < keys.Count; i++)
             {
                 List<string> rows = new List<string>();
@@ -74,9 +80,54 @@ namespace LoclizationApp
                 data.Add(rows);
             }
 
-            dgData.ItemsSource = data;
+            dgData.Items.Refresh();
+            AppendLocales();
+            cbMainLocal.SelectedItem = lang.Current;
+
+            cbLocales.SelectionChanged += CbLocalesSelectionChanged;
+            cbMainLocal.SelectionChanged += CbMainLocalSelectionChanged;
+        }
+        void AppendLocales()
+        {
+            cbLocales.Items.Clear();
+            cbMainLocal.Items.Clear();
+            cbRemovingLocal.Items.Clear();
+
+            cbLocales.Items.Add("--All--");
+
+            foreach (var item in lang.AvailableLanguages)
+            {
+                cbLocales.Items.Add(item);
+                cbMainLocal.Items.Add(item);
+                cbRemovingLocal.Items.Add(item);
+            }
+
+            cbLocales.SelectedIndex = 0;
         }
 
+        private void CbMainLocalSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (cbMainLocal.SelectedIndex == -1)
+                return;
+
+            lang.SetCurrent(((Language)cbMainLocal.SelectedItem).Code);
+        }
+        private void CbLocalesSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (cbLocales.SelectedIndex == -1)
+                return;
+
+            if (cbLocales.SelectedIndex == 0)
+            {
+                foreach (var item in dgData.Columns)
+                    item.Visibility = Visibility.Visible;
+                return;
+            }
+
+            foreach (var item in dgData.Columns)
+                if (item.Header.ToString() != "Keys")
+                    item.Visibility = item.Header.ToString() != ((Language)cbLocales.SelectedItem).Name ? Visibility.Hidden : Visibility.Visible;
+        }
         private void windowFileDrow(object sender, DragEventArgs e)
         {
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
@@ -114,6 +165,55 @@ namespace LoclizationApp
         private void dgDataCellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
         {
             //end edit
+            TextBox t = e.EditingElement as TextBox; //value
+
+        }
+        private void btnBrowseClick(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+
+            ofd.InitialDirectory = "c:\\";
+            ofd.Filter = "locale files (*.ini)|*.ini";
+            ofd.FilterIndex = 2;
+            ofd.RestoreDirectory = true;
+            ofd.Multiselect = false;
+
+            if (ofd.ShowDialog() == true)
+            {
+                try
+                {
+                    OpenFile(ofd.FileName);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error: Could not read file from disk. Original error: " + ex.Message);
+                }
+            }
+        }
+        private void btnAddNodeClick(object sender, RoutedEventArgs e)
+        {
+            if(string.IsNullOrWhiteSpace(tbNodeAddName.Text))
+            {
+                lblStatus.Content = $"Node name can not be empty!";
+                return;
+            }
+
+            lang.AddNode(tbNodeAddName.Text);
+            lblStatus.Content = $"Node \'{tbNodeAddName.Text}\' added";
+            tbNodeAddName.Text = "";
+
+            SetData();
+        }
+        private void btnRemoveLocalClick(object sender, RoutedEventArgs e)
+        {
+            if (cbRemovingLocal.SelectedIndex == -1)
+                return;
+
+            lblStatus.Content = lang.RemoveLocale(((Language)cbRemovingLocal.SelectedItem).Name) ?
+                $"{((Language)cbRemovingLocal.SelectedItem).Name} is remove" :
+                $"{((Language)cbRemovingLocal.SelectedItem).Name} can not be removing";
+
+            SetData();
         }
     }
 }
