@@ -65,21 +65,35 @@ namespace Verloka.HelperLib.Localization
         {
             return file[lang][name].ToString();
         }
-        public void AddNode(string key)
+        public void AddKey(string key)
         {
             foreach (var item in file.Sections)
                 if (!item.IsRoot)
                     item.Add(key, "");
         }
+        public void EditKey(string locale, string key, string value)
+        {
+            file[locale][key] = value;
+        }
         public bool RemoveKey(string key)
         {
-            return true;
+            bool res = false;
+
+            foreach (var item in file.Sections)
+                if (item.Remove(key))
+                    res = true;
+
+            return res;
         }
         public bool RemoveLocale(string name)
         {
             bool b = file.RemoveSection(name);
             UpdateAvailableLanguages();
             return b;
+        }
+        public void Save()
+        {
+            file.Save();
         }
     }
 }

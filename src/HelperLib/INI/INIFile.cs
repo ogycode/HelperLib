@@ -102,7 +102,7 @@ namespace Verloka.HelperLib.INI
         }
         public void Save()
         {
-            content = read(Path, Separator, Comment, LeftBracket, RightBracket, Encoding);
+            save(content, Path, Separator, Comment, LeftBracket, RightBracket, Encoding);
         }
 
         public static IDictionary<string, object> GetDictionary(string path)
@@ -156,7 +156,7 @@ namespace Verloka.HelperLib.INI
                 }
             return con;
         }
-        static void save(Content cont, string path, string separator, string comment, Encoding edc, bool repeat = false)
+        static void save(Content cont, string path, string separator, string comment, string lb, string rb, Encoding edc, bool repeat = false)
         {
             try
             {
@@ -178,7 +178,7 @@ namespace Verloka.HelperLib.INI
                     {
                         if (!item.IsRoot)
                         {
-                            sw.WriteLine($"[{item.Name}]");
+                            sw.WriteLine($"{lb}{item.Name}{rb}");
                             foreach (var sec in item.GetPureContent())
                                 sw.WriteLine($"{sec.Key}{separator}{sec.Value}");
                             sw.WriteLine("");
@@ -192,7 +192,7 @@ namespace Verloka.HelperLib.INI
                     File.Delete(path);
 
                 if (!repeat)
-                    save(cont, path, separator, comment, edc, true);
+                    save(cont, path, separator, comment, lb, rb, edc, true);
             }
         }
     }

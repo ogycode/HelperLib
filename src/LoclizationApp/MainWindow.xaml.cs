@@ -39,9 +39,9 @@ namespace LoclizationApp
             lblStatus.Content = $"File \'{name}\' loaded ({DateTime.Now.ToLongTimeString()})";
             tbFilePath.Text = name;
 
-            SetData();
+            SetData(false);
         }
-        void SetData()
+        void SetData(bool save)
         {
             if (lang == null)
                 return;
@@ -86,6 +86,9 @@ namespace LoclizationApp
 
             cbLocales.SelectionChanged += CbLocalesSelectionChanged;
             cbMainLocal.SelectionChanged += CbMainLocalSelectionChanged;
+
+            if (save)
+                lang.Save();
         }
         void AppendLocales()
         {
@@ -158,15 +161,19 @@ namespace LoclizationApp
                 }
             }
         }
-        private void dgDataEditBegin(object sender, DataGridBeginningEditEventArgs e)
-        {
-            //start edit
-        }
         private void dgDataCellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
         {
             //end edit
             TextBox t = e.EditingElement as TextBox; //value
 
+            if(string.IsNullOrWhiteSpace(t.Text))
+            {
+                lblStatus.Content = $"Edited value can not be empty!";
+                e.Cancel = true;
+                return;
+            }
+
+            //lang.EditKey(e.Column.Header, e.Row.)
         }
         private void btnBrowseClick(object sender, RoutedEventArgs e)
         {
@@ -198,11 +205,11 @@ namespace LoclizationApp
                 return;
             }
 
-            lang.AddNode(tbNodeAddName.Text);
+            lang.AddKey(tbNodeAddName.Text);
             lblStatus.Content = $"Node \'{tbNodeAddName.Text}\' added";
             tbNodeAddName.Text = "";
 
-            SetData();
+            SetData(cbSave.IsChecked.Value);
         }
         private void btnRemoveLocalClick(object sender, RoutedEventArgs e)
         {
@@ -213,7 +220,26 @@ namespace LoclizationApp
                 $"{((Language)cbRemovingLocal.SelectedItem).Name} is remove" :
                 $"{((Language)cbRemovingLocal.SelectedItem).Name} can not be removing";
 
-            SetData();
+            SetData(cbSave.IsChecked.Value);
+        }
+        private void btnRemoveNodeClick(object sender, RoutedEventArgs e)
+        {
+            if(string.IsNullOrWhiteSpace(tbNodeRemoveName.Text))
+            {
+                lblStatus.Content = $"Key name for removing can not be empty!";
+                return;
+            }
+
+            lblStatus.Content = lang.RemoveKey(tbNodeRemoveName.Text) ?
+                $"\'{tbNodeRemoveName.Text}\' was removed" :
+                $"\'{tbNodeRemoveName.Text}\' can not be removed";
+
+            tbNodeRemoveName.Text = "";
+            SetData(cbSave.IsChecked.Value);
+        }
+        private void btnSaveClick(object sender, RoutedEventArgs e)
+        {
+            SetData(true);
         }
     }
 }
