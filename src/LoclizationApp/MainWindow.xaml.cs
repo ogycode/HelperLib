@@ -1,19 +1,10 @@
 ﻿using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using Verloka.HelperLib.Localization;
 
 namespace LoclizationApp
@@ -39,9 +30,9 @@ namespace LoclizationApp
             lblStatus.Content = $"File \'{name}\' loaded ({DateTime.Now.ToLongTimeString()})";
             tbFilePath.Text = name;
 
-            SetData(false);
+            SetData();
         }
-        void SetData(bool save)
+        void SetData()
         {
             if (lang == null)
                 return;
@@ -58,7 +49,7 @@ namespace LoclizationApp
             keyHead.Binding = new Binding($"[{columnNumber.ToString()}]");
             keyHead.IsReadOnly = true;
             dgData.Columns.Add(keyHead);
-            
+
             //languages
             foreach (var item in lang.AvailableLanguages)
             {
@@ -86,9 +77,6 @@ namespace LoclizationApp
 
             cbLocales.SelectionChanged += CbLocalesSelectionChanged;
             cbMainLocal.SelectionChanged += CbMainLocalSelectionChanged;
-
-            if (save)
-                lang.Save();
         }
         void AppendLocales()
         {
@@ -166,14 +154,16 @@ namespace LoclizationApp
             //end edit
             TextBox t = e.EditingElement as TextBox; //value
 
-            if(string.IsNullOrWhiteSpace(t.Text))
+            if (string.IsNullOrWhiteSpace(t.Text))
             {
                 lblStatus.Content = $"Edited value can not be empty!";
-                e.Cancel = true;
-                return;
+                t.Text = ((List<string>)e.Row.Item)[0];
             }
 
-            //lang.EditKey(e.Column.Header, e.Row.)
+            lang.EditKey(e.Column.Header.ToString(), ((List<string>)e.Row.Item)[0], t.Text);
+            
+            if (cbSave.IsChecked.Value)
+                lang.Save();
         }
         private void btnBrowseClick(object sender, RoutedEventArgs e)
         {
@@ -199,7 +189,7 @@ namespace LoclizationApp
         }
         private void btnAddNodeClick(object sender, RoutedEventArgs e)
         {
-            if(string.IsNullOrWhiteSpace(tbNodeAddName.Text))
+            if (string.IsNullOrWhiteSpace(tbNodeAddName.Text))
             {
                 lblStatus.Content = $"Node name can not be empty!";
                 return;
@@ -209,7 +199,9 @@ namespace LoclizationApp
             lblStatus.Content = $"Node \'{tbNodeAddName.Text}\' added";
             tbNodeAddName.Text = "";
 
-            SetData(cbSave.IsChecked.Value);
+            SetData();
+            if (cbSave.IsChecked.Value)
+                lang.Save();
         }
         private void btnRemoveLocalClick(object sender, RoutedEventArgs e)
         {
@@ -220,11 +212,14 @@ namespace LoclizationApp
                 $"{((Language)cbRemovingLocal.SelectedItem).Name} is remove" :
                 $"{((Language)cbRemovingLocal.SelectedItem).Name} can not be removing";
 
-            SetData(cbSave.IsChecked.Value);
+            SetData();
+
+            if (cbSave.IsChecked.Value)
+                lang.Save();
         }
         private void btnRemoveNodeClick(object sender, RoutedEventArgs e)
         {
-            if(string.IsNullOrWhiteSpace(tbNodeRemoveName.Text))
+            if (string.IsNullOrWhiteSpace(tbNodeRemoveName.Text))
             {
                 lblStatus.Content = $"Key name for removing can not be empty!";
                 return;
@@ -235,11 +230,30 @@ namespace LoclizationApp
                 $"\'{tbNodeRemoveName.Text}\' can not be removed";
 
             tbNodeRemoveName.Text = "";
-            SetData(cbSave.IsChecked.Value);
+            SetData();
+
+            if (cbSave.IsChecked.Value)
+                lang.Save();
         }
         private void btnSaveClick(object sender, RoutedEventArgs e)
         {
-            SetData(true);
+            lang.Save();
+        }
+        private void btnAddLocalClick(object sender, RoutedEventArgs e)
+        {
+            if(string.IsNullOrWhiteSpace(tbLocName.Text) || string.IsNullOrWhiteSpace(tbLocCode.Text))
+            {
+                lblStatus.Content = "Locale name and code can not be empty!";
+                return;
+            }
+
+            lblStatus.Content = lang.AddLocale(tbLocName.Text, tbLocCode.Text) ?
+                $"Locale {tbLocName.Text}({tbLocCode.Text}) added" :
+                $"Locale {tbLocName.Text}({tbLocCode.Text}) can not be add";
+
+            SetData();
+            if (cbSave.IsChecked.Value)
+                lang.Save();
         }
     }
 }

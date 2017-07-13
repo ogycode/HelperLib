@@ -167,8 +167,9 @@ namespace Verloka.HelperLib.INI
                     sw.WriteLine($"{comment}INI file created by Verloka.HelperLib.INI");
                     sw.WriteLine($"{comment}Verloka.HelperLib developed by Verloka Vadim");
                     sw.WriteLine($"{comment}Verloka Vadim - https://verloka.github.io");
+                    sw.WriteLine($"{comment}");
+                    sw.WriteLine($"{comment}Last modified - {DateTime.Now.ToString()}");
                     sw.WriteLine($"{comment}{new string('-', 50)}\n\n");
-
 
                     foreach (var root in cont.Root.GetPureContent())
                         sw.WriteLine($"{root.Key}{separator}{root.Value}");

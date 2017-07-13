@@ -49,7 +49,7 @@
         </Grid>
         <TextBox x:Name="tbFilePath" Grid.Column="0" Grid.Row="1" VerticalAlignment="Top" Margin="5,5,5,0" Height="24" FontSize="14" Text="Path to local file..." IsReadOnly="True" VerticalContentAlignment="Center" TextWrapping="NoWrap"/>
         <Button x:Name="btnBrowse" Content="Browse" Grid.Column="1" Grid.Row="1" Margin="5" Width="100" VerticalAlignment="Top" HorizontalAlignment="Center" Height="24" Click="btnBrowseClick"/>
-        <DataGrid x:Name="dgData" Grid.Row="2" Grid.ColumnSpan="2" Background="{x:Null}" BorderBrush="{x:Null}" BorderThickness="0" AllowDrop="True" SelectionMode="Single" AutoGenerateColumns="False" CanUserReorderColumns="False" MinColumnWidth="50" VerticalGridLinesBrush="LightGray" AlternatingRowBackground="LightGoldenrodYellow" RowBackground="PaleGoldenrod" CellEditEnding="dgDataCellEditEnding" GridLinesVisibility="Vertical" CanUserAddRows="false" />
+        <DataGrid x:Name="dgData" Grid.Row="2" Grid.ColumnSpan="2" Background="{x:Null}" BorderBrush="{x:Null}" BorderThickness="0" AllowDrop="True" SelectionMode="Single" AutoGenerateColumns="False" CanUserReorderColumns="False" MinColumnWidth="50" VerticalGridLinesBrush="LightGray" AlternatingRowBackground="LightGoldenrodYellow" RowBackground="PaleGoldenrod" CellEditEnding="dgDataCellEditEnding" GridLinesVisibility="Vertical" CanUserAddRows="false" SelectionUnit="Cell" />
         <Grid Grid.Row="3" Grid.ColumnSpan="2" Background="PaleGoldenrod">
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto"/>
@@ -84,7 +84,7 @@
             <TextBox x:Name="tbLocName" Grid.Column="0" Grid.Row="1" VerticalAlignment="Top" Margin="5" Height="24" FontSize="14" Text="Name" VerticalContentAlignment="Center" TextWrapping="NoWrap"/>
             <Label Content="Locale code:" Grid.Row="0" Grid.Column="1" Foreground="Black" Margin="5" FontSize="16" />
             <TextBox x:Name="tbLocCode" Grid.Column="1" Grid.Row="1" VerticalAlignment="Top" Margin="5" Height="24" FontSize="14" Text="Code" VerticalContentAlignment="Center" TextWrapping="NoWrap"/>
-            <Button x:Name="btnAddLocal" Content="Add local" Grid.Column="2" Grid.Row="1" Margin="5" Width="100" VerticalAlignment="Top" HorizontalAlignment="Center" Height="24"/>
+            <Button x:Name="btnAddLocal" Content="Add locale" Grid.Column="2" Grid.Row="1" Margin="5" Width="100" VerticalAlignment="Top" HorizontalAlignment="Center" Height="24" Click="btnAddLocalClick"/>
             <Label Content="Remove locale:" Grid.Row="0" Grid.Column="3" Foreground="Black" Margin="5" FontSize="16" />
             <ComboBox x:Name="cbRemovingLocal" Margin="5" Grid.Column="3" Grid.Row="1"/>
             <Button x:Name="btnRemoveLocal" Content="Remove locale" Grid.Column="4" Grid.Row="1" Margin="5" Width="100" VerticalAlignment="Top" HorizontalAlignment="Center" Height="24" Click="btnRemoveLocalClick"/>

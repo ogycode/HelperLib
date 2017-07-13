@@ -7,6 +7,8 @@ namespace Verloka.HelperLib.Localization
 {
     public class Manager
     {
+        public const string CODE = "code";
+
         public event Action<Manager> LanguageChanged;
         public event Action<string> LoadError;
 
@@ -65,15 +67,46 @@ namespace Verloka.HelperLib.Localization
         {
             return file[lang][name].ToString();
         }
-        public void AddKey(string key)
+        public bool AddKey(string key)
         {
+            if (key == CODE)
+                return false;
+
             foreach (var item in file.Sections)
                 if (!item.IsRoot)
                     item.Add(key, "");
+
+            return true;
         }
-        public void EditKey(string locale, string key, string value)
+        public bool EditKey(string locale, string key, string value)
         {
+            if (key == CODE)
+                return false;
+
             file[locale][key] = value;
+
+            return true;
+        }
+        public bool AddLocale(string name, string code)
+        {
+            var s1 = AvailableLanguages.SingleOrDefault(l => l.Name == name);
+            var s2 = AvailableLanguages.SingleOrDefault(l => l.Code == code);
+
+            if (s1 != null || s2 != null)
+                return false;
+
+            INI.Section sec = file[name];
+            sec[CODE] = code;
+
+            if (file.Sections.Count <= 2)
+                return true;
+
+            foreach (var item in file.Sections[2].GetKeys())
+                if (item != CODE)
+                    sec[item] = "";
+
+            UpdateAvailableLanguages();
+            return true;
         }
         public bool RemoveKey(string key)
         {
