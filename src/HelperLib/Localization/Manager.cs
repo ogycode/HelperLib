@@ -8,6 +8,9 @@ namespace Verloka.HelperLib.Localization
     public class Manager
     {
         public const string CODE = "code";
+        public const string NULL_NAME = "null";
+        public const string CURRENT_KEY = "current";
+        public const string EMPTY_VALUE = "empty";
 
         public event Action<Manager> LanguageChanged;
         public event Action<string> LoadError;
@@ -19,7 +22,7 @@ namespace Verloka.HelperLib.Localization
         {
             get
             {
-                if (Current.Name != "null")
+                if (Current.Name != NULL_NAME)
                     return file[Current.Name][key] != null ? file[Current.Name][key].ToString() : key;
 
                 return key;
@@ -32,7 +35,7 @@ namespace Verloka.HelperLib.Localization
         {
             Path = path;
             AvailableLanguages = new List<Language>();
-            Current = new Language() { Name = "null" };
+            Current = new Language() { Name = NULL_NAME };
         }
 
         public void Load()
@@ -45,7 +48,7 @@ namespace Verloka.HelperLib.Localization
 
             file = new INI.INIFile(Path, "=", ";", System.Text.Encoding.UTF8);
             UpdateAvailableLanguages();
-            SetCurrent(file.Read<string>("current"));
+            SetCurrent(file.Read<string>(CURRENT_KEY));
         }
         public void UpdateAvailableLanguages()
         {
@@ -53,7 +56,7 @@ namespace Verloka.HelperLib.Localization
             foreach (var item in file.Sections)
                 if (!item.IsRoot)
                 {
-                    Language l = new Language() { Name = item.Name, Code = item["code"].ToString() };
+                    Language l = new Language() { Name = item.Name, Code = item[CODE].ToString() };
                     AvailableLanguages.Add(l);
                 }
         }
@@ -65,27 +68,24 @@ namespace Verloka.HelperLib.Localization
         public List<string> Keys() => file.Sections.Count > 1 ? (List<string>)file.Sections[1].GetKeys() : new List<string>();
         public string GetValueByLanguage(string lang, string name)
         {
-            return file[lang][name].ToString();
+            return file[lang][name]?.ToString();
         }
         public bool AddKey(string key)
         {
-            if (key == CODE)
-                return false;
+            if(isValidKey(key))
+            {
+                foreach (var item in file.Sections)
+                    if (!item.IsRoot)
+                        item.Add(key, EMPTY_VALUE);
 
-            foreach (var item in file.Sections)
-                if (!item.IsRoot)
-                    item.Add(key, "");
+                return true;
+            }
 
-            return true;
+            return false;
         }
-        public bool EditKey(string locale, string key, string value)
+        public void EditKey(string locale, string key, string value)
         {
-            if (key == CODE)
-                return false;
-
             file[locale][key] = value;
-
-            return true;
         }
         public bool AddLocale(string name, string code)
         {
@@ -98,14 +98,15 @@ namespace Verloka.HelperLib.Localization
             INI.Section sec = file[name];
             sec[CODE] = code;
 
-            if (file.Sections.Count <= 2)
+            UpdateAvailableLanguages();
+
+            if (file.Sections.Count == 2)
                 return true;
 
-            foreach (var item in file.Sections[2].GetKeys())
+            foreach (var item in file.Sections[1].GetKeys())
                 if (item != CODE)
-                    sec[item] = "";
-
-            UpdateAvailableLanguages();
+                    sec[item] = EMPTY_VALUE;
+            
             return true;
         }
         public bool RemoveKey(string key)
@@ -120,13 +121,40 @@ namespace Verloka.HelperLib.Localization
         }
         public bool RemoveLocale(string name)
         {
-            bool b = file.RemoveSection(name);
+            bool res = file.RemoveSection(name);
             UpdateAvailableLanguages();
-            return b;
+            return res;
+        }
+        public bool RenameLocale(string name, string newName)
+        {
+            var sec = file.Sections.SingleOrDefault(l => l.Name == name);
+
+            if (sec == null)
+                return false;
+
+            sec.SetName(newName);
+            UpdateAvailableLanguages();
+
+            return true;
         }
         public void Save()
         {
             file.Save();
+        }
+
+        bool isValidKey(string key)
+        {
+            switch (key)
+            {
+                case NULL_NAME:
+                    return false;
+                case CODE:
+                    return false;
+                default:
+                    break;
+            }
+
+            return true;
         }
     }
 }

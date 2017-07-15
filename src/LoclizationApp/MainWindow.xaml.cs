@@ -21,7 +21,7 @@ namespace LoclizationApp
             data = new List<List<string>>();
             dgData.ItemsSource = data;
         }
-
+        
         void OpenFile(string name)
         {
             lang = new Manager(name);
@@ -73,16 +73,18 @@ namespace LoclizationApp
 
             dgData.Items.Refresh();
             AppendLocales();
-            cbMainLocal.SelectedItem = lang.Current;
 
             cbLocales.SelectionChanged += CbLocalesSelectionChanged;
-            cbMainLocal.SelectionChanged += CbMainLocalSelectionChanged;
+            cbLocalesRename.SelectionChanged += CbLocalesRenameSelectionChanged;
         }
         void AppendLocales()
         {
+            cbMainLocal.SelectionChanged -= CbMainLocalSelectionChanged;
+
             cbLocales.Items.Clear();
             cbMainLocal.Items.Clear();
             cbRemovingLocal.Items.Clear();
+            cbLocalesRename.Items.Clear();
 
             cbLocales.Items.Add("--All--");
 
@@ -91,17 +93,31 @@ namespace LoclizationApp
                 cbLocales.Items.Add(item);
                 cbMainLocal.Items.Add(item);
                 cbRemovingLocal.Items.Add(item);
+                cbLocalesRename.Items.Add(item);
             }
 
             cbLocales.SelectedIndex = 0;
+            cbMainLocal.SelectedItem = lang.Current;
+
+            cbMainLocal.SelectionChanged += CbMainLocalSelectionChanged;
         }
 
+        private void CbLocalesRenameSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (cbLocalesRename.SelectedIndex == -1)
+                return;
+
+            tbRename.Text = (cbLocalesRename.SelectedItem as Language).Name;
+        }
         private void CbMainLocalSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (cbMainLocal.SelectedIndex == -1)
                 return;
 
             lang.SetCurrent(((Language)cbMainLocal.SelectedItem).Code);
+
+            if (cbSave.IsChecked.Value)
+                lang.Save();
         }
         private void CbLocalesSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -254,6 +270,26 @@ namespace LoclizationApp
             SetData();
             if (cbSave.IsChecked.Value)
                 lang.Save();
+        }
+        private void btnRenameClick(object sender, RoutedEventArgs e)
+        {
+            if(string.IsNullOrWhiteSpace(tbRename.Text))
+            {
+                lblStatus.Content = "Name of language is empty!";
+                return;
+            }
+
+            if (lang.RenameLocale((cbLocalesRename.SelectedItem as Language).Name, tbRename.Text))
+            {
+                lblStatus.Content = "New name apply";
+                SetData();
+                if (cbSave.IsChecked.Value)
+                    lang.Save();
+
+                tbRename.Text = "";
+            }
+            else
+                lblStatus.Content = "New name not apply";
         }
     }
 }

@@ -62,6 +62,10 @@ namespace Verloka.HelperLib.INI
             else
                 return false;
         }
+        public void SetName(string name)
+        {
+            Name = name;
+        }
 
         public IList<string> GetKeys()
         {
