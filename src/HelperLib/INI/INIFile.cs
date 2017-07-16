@@ -127,7 +127,7 @@ namespace Verloka.HelperLib.INI
             Content con = new Content();
             Section sec = con.Root;
 
-            using (StreamReader sr = new StreamReader(File.Open(path, FileMode.Open), edc))
+            using (StreamReader sr = File.OpenText(path))
                 while (!sr.EndOfStream)
                 {
                     string line = sr.ReadLine();

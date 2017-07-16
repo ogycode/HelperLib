@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>Verloka.HelperLib</id>
-    <version>1.4.0.0</version>
+    <version>1.4.0.2</version>
     <title>HelperLib</title>
     <authors>Verloka Vadim</authors>
     <owners>Verloka Vadim</owners>
@@ -10,8 +10,8 @@
     <projectUrl>https://github.com/ogycode/HelperLib</projectUrl>
     <iconUrl>https://raw.githubusercontent.com/ogycode/HelperLib/master/merch/icon.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>Lib for saving your data in Register as settings and other helpers methods</description>
-    <releaseNotes>Added ini-parser and tool for localization</releaseNotes>
+    <description>Tool for help, settings, updater, ini-parser, localization</description>
+    <releaseNotes>Hot fix</releaseNotes>
     <copyright>Copyright Verloka Vadim 2017</copyright>
     <tags>Register setting ini-parser localization</tags>
   </metadata>
