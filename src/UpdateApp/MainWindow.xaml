@@ -4,17 +4,51 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="Update manager 1.0.0.0" 
-        Height="350" 
-        Width="525"
-        Background="DarkSeaGreen">
-    <Grid>
+        Title="Update Editor" 
+        MinHeight="600" 
+        MinWidth="800"
+        Height="600" 
+        Width="800" Icon="icon.ico">
+    <Grid Background="DarkSeaGreen">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="126*"/>
-            <ColumnDefinition Width="391*"/>
+            <ColumnDefinition Width="200px"/>
+            <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <Grid Grid.Column="0" Background="ForestGreen">
+        <Grid Grid.Column="0" Grid.RowSpan="4" Background="ForestGreen">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+            <Label Content="History:" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="5" FontSize="16" Foreground="White"/>
+
+            <Button x:Name="btnShow" Grid.Column="0" Grid.Row="2" Content="Show" Margin="5" VerticalAlignment="Top" Height="24"/>
+            <Button x:Name="btnDelete" Grid.Column="1" Grid.Row="2" Content="Delete" Margin="5" VerticalAlignment="Top" Height="24"/>
+        </Grid>
+        <Label Content="Update Editor 1.0.0.0 by Verloka Vadim" Grid.Row="0" Grid.Column="2" Foreground="Black" Margin="5" FontSize="16" HorizontalContentAlignment="Right" />
+        <Label Content="https://verloka.github.io" Grid.Row="1" Grid.Column="2" Foreground="Black" Margin="5" FontSize="10" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" />
+        <Grid Grid.Column="1" Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="auto"/>
+            </Grid.ColumnDefinitions>
+            <TextBox x:Name="tbFilePath" Grid.Column="0" Grid.Row="2" VerticalAlignment="Top" Margin="5,5,5,0" Height="24" FontSize="14" Text="Path to local file..." IsReadOnly="True" VerticalContentAlignment="Center" TextWrapping="NoWrap" />
+            <Button x:Name="btnBrowse" Grid.Column="1" Grid.Row="2" Content="Browse" Margin="5" Width="100" VerticalAlignment="Top" HorizontalAlignment="Center" Height="24"/>
+        </Grid>
+        <Grid Grid.Column="1" Grid.Row="3">
             
         </Grid>
+        <Label x:Name="lblStatus" Content="Ready" Grid.Row="6" Grid.ColumnSpan="2" Padding="5" FontSize="16" Background="ForestGreen" Foreground="White"/>
     </Grid>
 </Window>
