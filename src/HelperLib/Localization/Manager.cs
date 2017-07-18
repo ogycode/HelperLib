@@ -46,7 +46,7 @@ namespace Verloka.HelperLib.Localization
                 return;
             }
 
-            file = new INI.INIFile(Path, "=", ";", System.Text.Encoding.UTF8);
+            file = new INI.INIFile(Path, "=", ";");
             UpdateAvailableLanguages();
             SetCurrent(file.Read<string>(CURRENT_KEY));
         }
@@ -69,8 +69,7 @@ namespace Verloka.HelperLib.Localization
 
             Current = lang;
 
-            file.Write("current", Current.Code);
-            Save();
+            file.Write(CURRENT_KEY, Current.Code);
 
             LanguageChanged?.Invoke(this);
         }

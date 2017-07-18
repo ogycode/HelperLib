@@ -52,7 +52,9 @@
     <Compile Include="Settings\RegSettings.cs" />
     <Compile Include="Update\DownloadClient.cs" />
     <Compile Include="Update\UpdateClient.cs" />
-    <Compile Include="Update\UpdateItem.cs" />
+    <Compile Include="Update\UpdateElement.cs" />
+    <Compile Include="Update\UpdateFile.cs" />
+    <Compile Include="Update\UpdateFileType.cs" />
     <Compile Include="Update\Version.cs" />
   </ItemGroup>
   <ItemGroup>

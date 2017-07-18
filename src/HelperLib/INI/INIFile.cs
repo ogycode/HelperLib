@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using System.Text.RegularExpressions;
 
 namespace Verloka.HelperLib.INI
@@ -180,10 +179,7 @@ namespace Verloka.HelperLib.INI
         {
             try
             {
-                if (File.Exists(path))
-                    File.Delete(path);
-
-                using (StreamWriter sw = File.CreateText(path))
+                using (StreamWriter sw = new StreamWriter(path, false))
                 {
                     //copyright
                     sw.WriteLine($"{comment}{new string('-', 50)}");
@@ -210,7 +206,7 @@ namespace Verloka.HelperLib.INI
                     }
                 }
             }
-            catch
+            catch (Exception e)
             {
                 if (!repeat)
                     SaveToFile(cont, path, separator, comment, lb, rb, true);

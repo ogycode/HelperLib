@@ -40,7 +40,7 @@ namespace INIApp
                 return;
             }
 
-            iniFile = new Verloka.HelperLib.INI.INIFile(name, tbSeparator.Text, tbComment.Text, tbLeftB.Text, tbRightB.Text, Encoding.UTF8);
+            iniFile = new Verloka.HelperLib.INI.INIFile(name, tbSeparator.Text, tbComment.Text, tbLeftB.Text, tbRightB.Text);
             tbFilePath.Text = name;
             lblStatus.Content = $"File \'{name}\' is loaded";
 
