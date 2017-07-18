@@ -62,7 +62,16 @@ namespace Verloka.HelperLib.Localization
         }
         public void SetCurrent(string code)
         {
-            Current = AvailableLanguages.SingleOrDefault(l => l.Code == code);
+            Language lang = AvailableLanguages.SingleOrDefault(l => l.Code == code);
+
+            if (lang == null)
+                return;
+
+            Current = lang;
+
+            file.Write("current", Current.Code);
+            Save();
+
             LanguageChanged?.Invoke(this);
         }
         public List<string> Keys() => file.Sections.Count > 1 ? (List<string>)file.Sections[1].GetKeys() : new List<string>();

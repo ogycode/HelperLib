@@ -63,7 +63,7 @@ namespace Verloka.HelperLib.Update
         }
         void Read(string resp)
         {
-            INI.INIFile file = new INI.INIFile(resp);
+            INI.INIFile file = new INI.INIFile(resp, true);
         }
     }
 }
