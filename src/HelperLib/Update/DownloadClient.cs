@@ -7,7 +7,7 @@ using System.Net;
 
 namespace Verloka.HelperLib.Update
 {
-    public class DownloadClient : IDisposable
+    public class DownloadClient
     {
         public event Action<string, int, double> DownloadProgress;
         public event Action DownloadCompleted;
@@ -38,6 +38,27 @@ namespace Verloka.HelperLib.Update
         {
             PrepareDownload();
         }
+        public void Close()
+        {
+            DownloadCompleted = null;
+            DownloadProgress = null;
+
+            CurrentUrl = null;
+            CurrentPath = null;
+            CurrentName = null;
+
+            SavePath = null;
+            Files.Clear();
+            Files = null;
+
+            TotalPerc = 0;
+            FileCount = 0;
+
+            sw.Stop();
+            sw = null;
+
+            GC.SuppressFinalize(this);
+        }
 
         bool PrepareDownload()
         {
@@ -56,11 +77,11 @@ namespace Verloka.HelperLib.Update
         
         public void DownloadFile(string urlAddress, string location)
         {
+            sw.Start();
             using (webClient = new WebClient())
             {
                 webClient.DownloadFileCompleted += new AsyncCompletedEventHandler(Completed);
                 webClient.DownloadProgressChanged += new DownloadProgressChangedEventHandler(ProgressChanged);
-                sw.Start();
                 try
                 {
                     webClient.DownloadFileAsync(new Uri(urlAddress), location);
@@ -84,47 +105,5 @@ namespace Verloka.HelperLib.Update
             if (PrepareDownload())
                 DownloadCompleted?.Invoke();
         }
-
-        #region IDisposable Support
-        private bool disposedValue = false;
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!disposedValue)
-            {
-                if (disposing)
-                {
-                    DownloadCompleted = null;
-                    DownloadProgress = null;
-
-                    CurrentUrl = null;
-                    CurrentPath = null;
-                    CurrentName = null;
-
-                    SavePath = null;
-                    Files.Clear();
-                    Files = null;
-
-                    TotalPerc = 0;
-                    FileCount = 0;
-                }
-
-                sw.Stop();
-                sw = null;
-
-                disposedValue = true;
-            }
-        }
-
-        ~DownloadClient()
-        {
-            Dispose(false);
-        }
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-        #endregion
     }
 }

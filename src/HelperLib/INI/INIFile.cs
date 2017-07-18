@@ -160,7 +160,10 @@ namespace Verloka.HelperLib.INI
         {
             try
             {
-                using (StreamWriter sw = new StreamWriter(File.Open(path, FileMode.CreateNew)))
+                if (File.Exists(path))
+                    File.Delete(path);
+
+                using (StreamWriter sw = File.CreateText(path))
                 {
                     //copyright
                     sw.WriteLine($"{comment}{new string('-', 50)}");
@@ -187,11 +190,8 @@ namespace Verloka.HelperLib.INI
                     }
                 }
             }
-            catch (IOException)
+            catch
             {
-                if (File.Exists(path))
-                    File.Delete(path);
-
                 if (!repeat)
                     save(cont, path, separator, comment, lb, rb, edc, true);
             }
