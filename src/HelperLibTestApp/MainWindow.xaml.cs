@@ -13,7 +13,7 @@ namespace HelperLibTestApp
         RegSettings regSettings;
 
         UpdateClient update;
-        UpdateItem ipdItem;
+        UpdateElement ipdItem;
 
         public MainWindow()
         {
@@ -118,7 +118,7 @@ namespace HelperLibTestApp
             tbUpdateUrl.IsEnabled = false;
             btnInitUpdate.IsEnabled = false;
         }
-        private void UpdateNewVersion(UpdateItem obj)
+        private void UpdateNewVersion(UpdateElement obj)
         {
             ipdItem = obj;
 
@@ -134,7 +134,7 @@ namespace HelperLibTestApp
         }
         private void btnCreateUpdateFileClick(object sender, RoutedEventArgs e)
         {
-            UpdateItem item = new UpdateItem();
+            UpdateElement item = new UpdateElement();
             item.Title = tbUpdateTitle.Text;
             item.ChangeNote = tbUpdateChangeLog.Text;
             item.Date = DateTime.Now;

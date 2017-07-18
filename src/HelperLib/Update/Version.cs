@@ -1,52 +1,70 @@
-﻿using System.Runtime.Serialization;
-
-namespace Verloka.HelperLib.Update
+﻿namespace Verloka.HelperLib.Update
 {
-    [DataContract]
     public class Version
     {
-        [DataMember]
-        public int Major { get; set; }
-        [DataMember]
-        public int Minor { get; set; }
-        [DataMember]
-        public int Revision { get; set; }
-        [DataMember]
-        public int Build { get; set; }
+        public const char SEPARATOR = '.';
+        public int Major { get; private set; }
+        public int Minor { get; private set; }
+        public int Build { get; private set; }
+        public int Revision { get; private set; }
         
         public Version()
         {
-            Major = 1;
+            Major = 0;
             Minor = 0;
             Revision = 0;
             Build = 0;
         }
-        public Version(int Major, int Minor, int Revision, int Build)
+        public Version(int Major, int Minor, int Build, int Revision)
         {
             this.Major = Major;
             this.Minor = Minor;
-            this.Revision = Revision;
             this.Build = Build;
+            this.Revision = Revision;
         }
-        public Version(string Major, string Minor, string Revision, string Build)
+        public Version(string Major, string Minor, string Build, string Revision)
         {
-            int i = 0;
-            int.TryParse(Major, out i);
+
+            int.TryParse(Major, out int i);
             this.Major = i;
 
             int.TryParse(Minor, out i);
             this.Minor = i;
 
-            int.TryParse(Revision, out i);
-            this.Revision = i;
-
             int.TryParse(Build, out i);
             this.Build = i;
+
+            int.TryParse(Revision, out i);
+            this.Revision = i;
+        }
+        public Version(Version copy)
+        {
+            SetMajor(copy.Major);
+            SetMinor(copy.Minor);
+            SetBuild(copy.Build);
+            SetRevision(copy.Revision);
+        }
+        
+        public void SetMajor(int Major)
+        {
+            this.Major = Major;
+        }
+        public void SetMinor(int Minor)
+        {
+            this.Minor = Minor;
+        }
+        public void SetBuild(int Build)
+        {
+            this.Build = Build;
+        }
+        public void SetRevision(int Revision)
+        {
+            this.Revision = Revision;
         }
 
         public override string ToString()
         {
-            return $"{Major}.{Minor}.{Revision}.{Build}";
+            return $"{Major}{SEPARATOR}{Minor}{SEPARATOR}{Build}{SEPARATOR}{Revision}";
         }
         public override bool Equals(object obj)
         {
@@ -58,21 +76,20 @@ namespace Verloka.HelperLib.Update
         }
         public override int GetHashCode()
         {
-            return Major ^ Minor ^ Revision ^ Build;
+            return Major ^ Minor ^ Build ^ Revision;
         }
 
         public static bool operator ==(Version a, Version b)
         {
             if (a == null || b == null)
                 return false;
-
-            return a.Major == b.Major && a.Minor == b.Minor && a.Revision == b.Revision && a.Build == b.Build;
+                        //Major                 Minor                   Build                   Revision
+            return (a.Major == b.Major) && (a.Minor == b.Minor) && (a.Build == b.Build) && (a.Revision == b.Revision);
         }
         public static bool operator !=(Version a, Version b)
         {
             return !(a == b);
         }
-
         public static bool operator >(Version a, Version b)
         {
             //Major
@@ -99,17 +116,13 @@ namespace Verloka.HelperLib.Update
             //Revision
             if (a.Revision > b.Revision)
                 return true;
-
-            if (a.Revision < b.Revision)
+            else
                 return false;
-
-            return false;
         }
         public static bool operator <(Version a, Version b)
         {
             return !(a > b);
         }
-
         public static bool operator >=(Version a, Version b)
         {
             if (a.Major >= b.Major)
@@ -126,6 +139,15 @@ namespace Verloka.HelperLib.Update
         public static bool operator <=(Version a, Version b)
         {
             return !(a >= b);
+        }
+
+        public static implicit operator Version(string str)
+        {
+            string[] part = str.Split(SEPARATOR);
+            if (part.Length < 4)
+                return new Version();
+
+            return new Version(part[0], part[1], part[2], part[3]);
         }
     }
 }

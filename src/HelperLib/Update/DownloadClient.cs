@@ -59,22 +59,6 @@ namespace Verloka.HelperLib.Update
 
             GC.SuppressFinalize(this);
         }
-
-        bool PrepareDownload()
-        {
-            if (Files.Count == 0)
-                return true;
-
-            TotalPerc = TotalPerc + 100;
-            CurrentUrl = Files.First();
-            Files.Remove(CurrentUrl);
-            CurrentName = System.IO.Path.GetFileName(new Uri(CurrentUrl).LocalPath);
-            CurrentPath = $"{SavePath}\\{CurrentName}";
-
-            DownloadFile(CurrentUrl, CurrentPath);
-            return false;
-        }
-        
         public void DownloadFile(string urlAddress, string location)
         {
             sw.Start();
@@ -93,6 +77,21 @@ namespace Verloka.HelperLib.Update
             }
         }
 
+        bool PrepareDownload()
+        {
+            if (Files.Count == 0)
+                return true;
+
+            TotalPerc = TotalPerc + 100;
+            CurrentUrl = Files.First();
+            Files.Remove(CurrentUrl);
+            CurrentName = System.IO.Path.GetFileName(new Uri(CurrentUrl).LocalPath);
+            CurrentPath = $"{SavePath}\\{CurrentName}";
+
+            DownloadFile(CurrentUrl, CurrentPath);
+            return false;
+        }
+        
         private void ProgressChanged(object sender, DownloadProgressChangedEventArgs e)
         {
             double speed = e.BytesReceived / 1024d / sw.Elapsed.TotalSeconds;

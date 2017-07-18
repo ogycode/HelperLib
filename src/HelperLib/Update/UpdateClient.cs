@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Runtime.Serialization.Json;
@@ -6,29 +7,27 @@ using System.Text;
 
 namespace Verloka.HelperLib.Update
 {
-    public class UpdateClient : IDisposable
+    public class UpdateClient
     {
-        public event Action<UpdateItem> NewVersion;
         public event Action<WebException> WebException;
-        
-        public string Url { get; set; }
+
+        public List<UpdateElement> Elements { get; private set; }
+        public UpdateElement Last { get; private set; }
+        public string Url { get; private set; }
         
         public UpdateClient(string Url)
         {
             this.Url = Url;
         }
         
-        public void Check(Version v)
+        public async void LoadData()
         {
-            using (var webClient = new WebClient())
+            using (WebClient client = new WebClient())
             {
                 try
                 {
-                    string resp = webClient.DownloadString(Url);
-                    UpdateItem upd = Deserialize<UpdateItem>(resp);
-
-                    if (upd.VersionNumber > v)
-                        NewVersion?.Invoke(upd);
+                    string resp = await client.DownloadStringTaskAsync(Url);
+                    Read(resp);
                 }
                 catch (WebException e)
                 {
@@ -36,78 +35,35 @@ namespace Verloka.HelperLib.Update
                 }
             }
         }
-        
-        public static T Deserialize<T>(string json)
+        public bool IsAvailable(Version ver)
         {
-            T obj = default(T);
-            try
-            {
-                var bytes = Encoding.UTF8.GetBytes(json);
-                using (MemoryStream ms = new MemoryStream(bytes))
-                {
-                    DataContractJsonSerializerSettings settings = new DataContractJsonSerializerSettings();
-                    settings.UseSimpleDictionaryFormat = true;
-
-                    var ser = new DataContractJsonSerializer(typeof(T), settings);
-                    obj = (T)ser.ReadObject(ms);
-                }
-            }
-            catch
-            {
-                obj = (T)Activator.CreateInstance(typeof(T));
-            }
-
-            return obj;
+            return CheckVersion(ver);
         }
-        public static string Serialize(object instance)
+        public bool IsAvailable(System.Version ver)
         {
-            string json = string.Empty;
-            try
-            {
-                using (MemoryStream ms = new MemoryStream())
-                {
-                    DataContractJsonSerializerSettings settings = new DataContractJsonSerializerSettings();
-                    settings.UseSimpleDictionaryFormat = true;
-
-                    var ser = new DataContractJsonSerializer(instance.GetType(), settings);
-                    ser.WriteObject(ms, instance);
-                    ms.Position = 0;
-                    using (StreamReader sr = new StreamReader(ms))
-                    { json = sr.ReadToEnd(); }
-                }
-            }
-            catch { }
-            return json;
+            return CheckVersion(new Version(ver.Major, ver.Minor, ver.Build, ver.Revision));
         }
-
-        #region IDisposable Support
-        private bool disposedValue = false; 
-
-        protected virtual void Dispose(bool disposing)
+        public bool IsAvailable(int Major, int Minor, int Build, int Revision)
         {
-            if (!disposedValue)
-            {
-                if (disposing)
-                {
-                    NewVersion = null;
-                    WebException = null;
-
-                    Url = null;
-                }
-
-                disposedValue = true;
-            }
+            return CheckVersion(new Version(Major, Minor, Build, Revision));
         }
+        public void Close()
+        {
+            Elements.Clear();
+            Elements = null;
+            Last = null;
+            Url = null;
 
-        ~UpdateClient()
-        {
-            Dispose(false);
-        }
-        public void Dispose()
-        {
-            Dispose(true);
             GC.SuppressFinalize(this);
         }
-        #endregion
+
+        bool CheckVersion(Version ver)
+        {
+            return Last.VersionNumber > ver;
+        }
+        void Read(string resp)
+        {
+            INI.INIFile file = new INI.INIFile(resp);
+        }
     }
 }

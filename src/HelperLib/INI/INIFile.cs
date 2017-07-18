@@ -9,13 +9,12 @@ namespace Verloka.HelperLib.INI
     public class INIFile
     {
         public event Action<string> IsNotFound;
-
-        public Encoding Encoding { get; private set; }
+        
         public string Separator { get; private set; }
         public string Comment { get; private set; }
         Content content;
         public string Path { get; private set; }
-        public List<Section> Sections { get { return content?.Sections; } }
+        public List<Section> Sections => content?.Sections;
         public string LeftBracket { get; private set; }
         public string RightBracket { get; private set; }
         public Section this[string name]
@@ -30,49 +29,35 @@ namespace Verloka.HelperLib.INI
             }
         }
 
-        public INIFile(string path)
+        public INIFile(string path, bool text = false)
         {
             Separator = "=";
             Comment = ";";
             Path = path;
-            Encoding = Encoding.UTF8;
             LeftBracket = "[";
             RightBracket = "]";
 
-            content = read(path, Separator, Comment, LeftBracket, RightBracket, Encoding);
+            content = text ? ReadFromText(path, Separator, Comment, LeftBracket, RightBracket) : ReadFromPath(path, Separator, Comment, LeftBracket, RightBracket);
         }
-        public INIFile(string path, string separ, string comm)
+        public INIFile(string path, string separ, string comm, bool text = false)
         {
             Separator = separ;
             Comment = comm;
             Path = path;
-            Encoding = Encoding.UTF8;
             LeftBracket = "[";
             RightBracket = "]";
 
-            content = read(path, Separator, Comment, LeftBracket, RightBracket, Encoding);
+            content = text ? ReadFromText(path, Separator, Comment, LeftBracket, RightBracket) : ReadFromPath(path, Separator, Comment, LeftBracket, RightBracket);
         }
-        public INIFile(string path, string separ, string comm, Encoding edc)
+        public INIFile(string path, string separ, string comm, string lb, string rb, bool text = false)
         {
             Separator = separ;
             Comment = comm;
             Path = path;
-            Encoding = edc;
-            LeftBracket = "[";
-            RightBracket = "]";
-
-            content = read(path, Separator, Comment, LeftBracket, RightBracket, Encoding);
-        }
-        public INIFile(string path, string separ, string comm, string lb, string rb, Encoding edc)
-        {
-            Separator = separ;
-            Comment = comm;
-            Path = path;
-            Encoding = edc;
             LeftBracket = lb;
             RightBracket = rb;
 
-            content = read(path, Separator, Comment, LeftBracket, RightBracket, Encoding);
+            content = text ? ReadFromText(path, Separator, Comment, LeftBracket, RightBracket) : ReadFromPath(path, Separator, Comment, LeftBracket, RightBracket);
         }
 
         public T Read<T>(string key)
@@ -102,27 +87,23 @@ namespace Verloka.HelperLib.INI
         }
         public void Save()
         {
-            save(content, Path, Separator, Comment, LeftBracket, RightBracket, Encoding);
+            SaveToFile(content, Path, Separator, Comment, LeftBracket, RightBracket);
         }
 
         public static IDictionary<string, object> GetDictionary(string path)
         {
-            return read(path, "=", "#", "[", "]", Encoding.UTF8).ToDictionary();
+            return ReadFromPath(path, "=", "#", "[", "]").ToDictionary();
         }
         public static IDictionary<string, object> GetDictionary(string path, string separ, string comm)
         {
-            return read(path, separ, comm, "[", "]", Encoding.UTF8).ToDictionary();
+            return ReadFromPath(path, separ, comm, "[", "]").ToDictionary();
         }
-        public static IDictionary<string, object> GetDictionary(string path, string separ, string comm, Encoding edc)
+        public static IDictionary<string, object> GetDictionary(string path, string separ, string comm, string lb, string rb)
         {
-            return read(path, separ, comm, "[", "]", edc).ToDictionary();
-        }
-        public static IDictionary<string, object> GetDictionary(string path, string separ, string comm, string lb, string rb, Encoding edc)
-        {
-            return read(path, separ, comm, lb, rb, edc).ToDictionary();
+            return ReadFromPath(path, separ, comm, lb, rb).ToDictionary();
         }
 
-        static Content read(string path, string separator, string comment, string lb, string rb, Encoding edc)
+        static Content ReadFromPath(string path, string separator, string comment, string lb, string rb)
         {
             Content con = new Content();
             Section sec = con.Root;
@@ -156,7 +137,46 @@ namespace Verloka.HelperLib.INI
                 }
             return con;
         }
-        static void save(Content cont, string path, string separator, string comment, string lb, string rb, Encoding edc, bool repeat = false)
+        static Content ReadFromText(string text, string separator, string comment, string lb, string rb)
+        {
+            Content con = new Content();
+            Section sec = con.Root;
+
+            string[] str = text.Split('\n');
+            int i = 0;
+
+            while (i <= str.Length - 1)
+            {
+                string line = str[i];
+
+                //remove comment
+                int index = line.IndexOf(comment);
+                if (index > 0)
+                    line = line.Substring(0, index);
+
+                if (string.IsNullOrWhiteSpace(line))
+                    continue;
+
+                string[] part = line.Split(separator.ToCharArray());
+
+                string section = Regex.Match(line, $@"\{lb}([^)]*)\{rb}").Groups[1].Value;
+
+                if (string.IsNullOrWhiteSpace(section))
+                {
+                    if (part.Length != 2)
+                        continue;
+
+                    sec[part[0]] = part[1];
+                }
+                else
+                    sec = con[section];
+
+                i++;
+            }
+
+            return con;
+        }
+        static void SaveToFile(Content cont, string path, string separator, string comment, string lb, string rb, bool repeat = false)
         {
             try
             {
@@ -193,7 +213,7 @@ namespace Verloka.HelperLib.INI
             catch
             {
                 if (!repeat)
-                    save(cont, path, separator, comment, lb, rb, edc, true);
+                    SaveToFile(cont, path, separator, comment, lb, rb, true);
             }
         }
     }
