@@ -7,15 +7,17 @@ using System.Text;
 
 namespace Verloka.HelperLib.Update
 {
-    public class UpdateClient
+    public class Manager
     {
         public event Action<WebException> WebException;
 
         public List<UpdateElement> Elements { get; private set; }
         public UpdateElement Last { get; private set; }
         public string Url { get; private set; }
-        
-        public UpdateClient(string Url)
+
+        INI.INIFile file;
+
+        public Manager(string Url)
         {
             this.Url = Url;
         }
@@ -49,8 +51,7 @@ namespace Verloka.HelperLib.Update
         }
         public void Close()
         {
-            Elements.Clear();
-            Elements = null;
+            file = null;
             Last = null;
             Url = null;
 
@@ -59,11 +60,11 @@ namespace Verloka.HelperLib.Update
 
         bool CheckVersion(Version ver)
         {
-            return Last.VersionNumber > ver;
+            return Last.GetVersionNumber() > ver;
         }
         void Read(string resp)
         {
-            INI.INIFile file = new INI.INIFile(resp, true);
+            file = new INI.INIFile(resp, true);
         }
     }
 }

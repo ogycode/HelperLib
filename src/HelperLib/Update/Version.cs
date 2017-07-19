@@ -3,80 +3,96 @@
     public class Version
     {
         public const char SEPARATOR = '.';
-        public int Major { get; private set; }
-        public int Minor { get; private set; }
-        public int Build { get; private set; }
-        public int Revision { get; private set; }
-        
+        private int major;
+        private int minor;
+        private int build;
+        private int revision;
+
         public Version()
         {
-            Major = 0;
-            Minor = 0;
-            Revision = 0;
-            Build = 0;
+            SetMajor(0);
+            SetMinor(0);
+            SetRevision(0);
+            SetBuild(0);
         }
         public Version(int Major, int Minor, int Build, int Revision)
         {
-            this.Major = Major;
-            this.Minor = Minor;
-            this.Build = Build;
-            this.Revision = Revision;
+            this.SetMajor(Major);
+            this.SetMinor(Minor);
+            this.SetBuild(Build);
+            this.SetRevision(Revision);
         }
         public Version(string Major, string Minor, string Build, string Revision)
         {
 
             int.TryParse(Major, out int i);
-            this.Major = i;
+            this.SetMajor(i);
 
             int.TryParse(Minor, out i);
-            this.Minor = i;
+            this.SetMinor(i);
 
             int.TryParse(Build, out i);
-            this.Build = i;
+            this.SetBuild(i);
 
             int.TryParse(Revision, out i);
-            this.Revision = i;
+            this.SetRevision(i);
         }
         public Version(Version copy)
         {
-            SetMajor(copy.Major);
-            SetMinor(copy.Minor);
-            SetBuild(copy.Build);
-            SetRevision(copy.Revision);
+            SetMajor(copy.GetMajor());
+            SetMinor(copy.GetMinor());
+            SetBuild(copy.GetBuild());
+            SetRevision(copy.GetRevision());
         }
-        
-        public void SetMajor(int Major)
+
+        public int GetMajor()
         {
-            this.Major = Major;
+            return major;
         }
-        public void SetMinor(int Minor)
+        public void SetMajor(int value)
         {
-            this.Minor = Minor;
+            major = value;
         }
-        public void SetBuild(int Build)
+        public int GetMinor()
         {
-            this.Build = Build;
+            return minor;
         }
-        public void SetRevision(int Revision)
+        public void SetMinor(int value)
         {
-            this.Revision = Revision;
+            minor = value;
+        }
+        public int GetBuild()
+        {
+            return build;
+        }
+        public void SetBuild(int value)
+        {
+            build = value;
+        }
+        public int GetRevision()
+        {
+            return revision;
+        }
+        public void SetRevision(int value)
+        {
+            revision = value;
         }
 
         public override string ToString()
         {
-            return $"{Major}{SEPARATOR}{Minor}{SEPARATOR}{Build}{SEPARATOR}{Revision}";
+            return $"{GetMajor()}{SEPARATOR}{GetMinor()}{SEPARATOR}{GetBuild()}{SEPARATOR}{GetRevision()}";
         }
         public override bool Equals(object obj)
         {
             if (obj == null)
                 return false;
 
-            return (obj as Version).Major == Major && (obj as Version).Minor == Minor && 
-                (obj as Version).Revision == Revision && (obj as Version).Build == Build;
+            return (obj as Version).GetMajor() == GetMajor() && (obj as Version).GetMinor() == GetMinor() && 
+                (obj as Version).GetRevision() == GetRevision() && (obj as Version).GetBuild() == GetBuild();
         }
         public override int GetHashCode()
         {
-            return Major ^ Minor ^ Build ^ Revision;
+            return GetMajor() ^ GetMinor() ^ GetBuild() ^ GetRevision();
         }
 
         public static bool operator ==(Version a, Version b)
@@ -84,7 +100,7 @@
             if (a == null || b == null)
                 return false;
                         //Major                 Minor                   Build                   Revision
-            return (a.Major == b.Major) && (a.Minor == b.Minor) && (a.Build == b.Build) && (a.Revision == b.Revision);
+            return (a.GetMajor() == b.GetMajor()) && (a.GetMinor() == b.GetMinor()) && (a.GetBuild() == b.GetBuild()) && (a.GetRevision() == b.GetRevision());
         }
         public static bool operator !=(Version a, Version b)
         {
@@ -93,28 +109,28 @@
         public static bool operator >(Version a, Version b)
         {
             //Major
-            if (a.Major > b.Major)
+            if (a.GetMajor() > b.GetMajor())
                 return true;
 
-            if (a.Major < b.Major)
+            if (a.GetMajor() < b.GetMajor())
                 return false;
 
             //Minor
-            if (a.Minor > b.Minor)
+            if (a.GetMinor() > b.GetMinor())
                 return true;
 
-            if (a.Minor < b.Minor)
+            if (a.GetMinor() < b.GetMinor())
                 return false;
 
             //Build
-            if (a.Build > b.Build)
+            if (a.GetBuild() > b.GetBuild())
                 return true;
 
-            if (a.Build < b.Build)
+            if (a.GetBuild() < b.GetBuild())
                 return false;
 
             //Revision
-            if (a.Revision > b.Revision)
+            if (a.GetRevision() > b.GetRevision())
                 return true;
             else
                 return false;
@@ -125,13 +141,13 @@
         }
         public static bool operator >=(Version a, Version b)
         {
-            if (a.Major >= b.Major)
+            if (a.GetMajor() >= b.GetMajor())
                 return true;
-            else if (a.Minor >= b.Minor)
+            else if (a.GetMinor() >= b.GetMinor())
                 return true;
-            else if (a.Build >= b.Build)
+            else if (a.GetBuild() >= b.GetBuild())
                 return true;
-            else if (a.Revision >= b.Revision)
+            else if (a.GetRevision() >= b.GetRevision())
                 return true;
             else
                 return false;
