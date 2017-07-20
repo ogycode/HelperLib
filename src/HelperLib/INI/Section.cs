@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Verloka.HelperLib.INI
 {
@@ -35,7 +36,15 @@ namespace Verloka.HelperLib.INI
         public T Read<T>(string key)
         {
             if (content.ContainsKey(key))
-                return (T)content[key];
+                if (content[key] is T)
+                    return (T)content[key];
+                else
+                    try
+                    {
+                        return (T)Convert.ChangeType(content[key], typeof(T));
+                    }
+                    catch { }
+
 
             return default(T);
         }

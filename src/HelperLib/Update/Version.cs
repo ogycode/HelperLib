@@ -97,10 +97,8 @@
 
         public static bool operator ==(Version a, Version b)
         {
-            if (a == null || b == null)
-                return false;
                         //Major                 Minor                   Build                   Revision
-            return (a.GetMajor() == b.GetMajor()) && (a.GetMinor() == b.GetMinor()) && (a.GetBuild() == b.GetBuild()) && (a.GetRevision() == b.GetRevision());
+            return (a?.GetMajor() == b?.GetMajor()) && (a?.GetMinor() == b?.GetMinor()) && (a?.GetBuild() == b?.GetBuild()) && (a?.GetRevision() == b?.GetRevision());
         }
         public static bool operator !=(Version a, Version b)
         {
@@ -109,28 +107,28 @@
         public static bool operator >(Version a, Version b)
         {
             //Major
-            if (a.GetMajor() > b.GetMajor())
+            if (a?.GetMajor() > b?.GetMajor())
                 return true;
 
-            if (a.GetMajor() < b.GetMajor())
+            if (a?.GetMajor() < b?.GetMajor())
                 return false;
 
             //Minor
-            if (a.GetMinor() > b.GetMinor())
+            if (a?.GetMinor() > b?.GetMinor())
                 return true;
 
-            if (a.GetMinor() < b.GetMinor())
+            if (a?.GetMinor() < b?.GetMinor())
                 return false;
 
             //Build
-            if (a.GetBuild() > b.GetBuild())
+            if (a?.GetBuild() > b?.GetBuild())
                 return true;
 
-            if (a.GetBuild() < b.GetBuild())
+            if (a?.GetBuild() < b?.GetBuild())
                 return false;
 
             //Revision
-            if (a.GetRevision() > b.GetRevision())
+            if (a?.GetRevision() > b?.GetRevision())
                 return true;
             else
                 return false;

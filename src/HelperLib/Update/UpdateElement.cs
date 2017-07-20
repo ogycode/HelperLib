@@ -9,8 +9,8 @@ namespace Verloka.HelperLib.Update
         Version versionNumber;
         string exe;
         string zip;
-        private DateTime date;
-        private string gUID;
+        private double date;
+        private string guid;
         
         public UpdateElement()
         {
@@ -19,7 +19,7 @@ namespace Verloka.HelperLib.Update
             SetVersionNumber(new Version());
             SetEXE("");
             SetZIP("");
-            SetDate(DateTime.Now);
+            SetDate(0);
             SetGUID(Guid.NewGuid().ToString());
         }
 
@@ -63,21 +63,30 @@ namespace Verloka.HelperLib.Update
         {
             zip = value;
         }
-        public DateTime GetDate()
+        public double GetDate()
         {
             return date;
         }
-        public void SetDate(DateTime value)
+        public void SetDate(double value)
         {
             date = value;
         }
         public string GetGUID()
         {
-            return gUID;
+            return guid;
+        }
+        public void SetGUID()
+        {
+            SetGUID(Guid.NewGuid().ToString());
         }
         public void SetGUID(string value)
         {
-            gUID = value;
+            guid = value;
+        }
+
+        public override string ToString()
+        {
+            return $"{GetVersionNumber()} / {DateTime.FromOADate(GetDate())}";
         }
     }
 }
