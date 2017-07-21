@@ -5,13 +5,15 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
         Title="INI Editor" 
-        Background="LightGray"
+        Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
         MinWidth="800"
         MinHeight="500"
         Width="800"
         Height="500" 
         Drop="windowFileDrow"
-        AllowDrop="True" Icon="favicon.ico" WindowStartupLocation="CenterScreen">
+        AllowDrop="True" 
+        Icon="favicon.ico" 
+        WindowStartupLocation="CenterScreen">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
@@ -25,7 +27,7 @@
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
-        <Grid Grid.Row="0" VerticalAlignment="Top" Grid.ColumnSpan="2" Background="Gray">
+        <Grid Grid.Row="0" VerticalAlignment="Top" Grid.ColumnSpan="2" Background="{DynamicResource {x:Static SystemColors.MenuBrushKey}}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
@@ -36,23 +38,23 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <Label Content="Separator:" Grid.Row="0" Grid.Column="0" Foreground="White" Margin="5" FontSize="16" />
+            <Label Content="Separator:" Grid.Row="0" Grid.Column="0" Foreground="{DynamicResource {x:Static SystemColors.ActiveCaptionTextBrushKey}}" Margin="5" FontSize="16" />
             <TextBox x:Name="tbSeparator" Grid.Column="0" Grid.Row="1" VerticalAlignment="Top" Margin="5" Height="24" FontSize="14" Text="=" VerticalContentAlignment="Center" TextWrapping="NoWrap"/>
-            <Label Content="Comment:" Grid.Row="0" Grid.Column="1" Foreground="White" Margin="5" FontSize="16" />
+            <Label Content="Comment:" Grid.Row="0" Grid.Column="1" Foreground="{DynamicResource {x:Static SystemColors.ActiveCaptionTextBrushKey}}" Margin="5" FontSize="16" />
             <TextBox x:Name="tbComment" Grid.Column="1" Grid.Row="1" VerticalAlignment="Top" Margin="5" Height="24" FontSize="14" Text=";" VerticalContentAlignment="Center" TextWrapping="NoWrap"/>
-            <Label Content="Bracket:" Grid.Row="0" Grid.Column="2" Foreground="White" Margin="5" FontSize="16" />
+            <Label Content="Bracket:" Grid.Row="0" Grid.Column="2" Foreground="{DynamicResource {x:Static SystemColors.ActiveCaptionTextBrushKey}}" Margin="5" FontSize="16" />
             <StackPanel Grid.Row="1" Grid.Column="2" Orientation="Horizontal">
                 <TextBox x:Name="tbLeftB" Grid.Column="1" Grid.Row="1" VerticalAlignment="Top" Margin="5" Height="24" FontSize="14" Text="[" VerticalContentAlignment="Center" TextWrapping="NoWrap" Width="50" HorizontalContentAlignment="Right"/>
-                <Label Content="Section name" Grid.Row="0" Grid.Column="1" Foreground="White" FontSize="16" />
+                <Label Content="Section name" Grid.Row="0" Grid.Column="1" Foreground="{DynamicResource {x:Static SystemColors.ActiveCaptionTextBrushKey}}" FontSize="16" />
                 <TextBox x:Name="tbRightB" Grid.Column="1" Grid.Row="1" VerticalAlignment="Top" Margin="5" Height="24" FontSize="14" Text="]" VerticalContentAlignment="Center" TextWrapping="NoWrap" Width="50"/>
             </StackPanel>
-            <Label Content="INI Editor 1.0.0.0 by Verloka Vadim" Grid.Row="0" Grid.Column="3" Foreground="White" Margin="5" FontSize="16" HorizontalContentAlignment="Right" />
-            <Label Content="https://verloka.github.io" Grid.Row="3" Grid.Column="3" Foreground="White" Margin="5" FontSize="10" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" />
+            <Label Content="INI Editor 1.0.0.0 by Verloka Vadim" Grid.Row="0" Grid.Column="3" Foreground="{DynamicResource {x:Static SystemColors.ActiveCaptionTextBrushKey}}" Margin="5" FontSize="16" HorizontalContentAlignment="Right" />
+            <Label Content="https://verloka.github.io" Grid.Row="3" Grid.Column="3" Foreground="{DynamicResource {x:Static SystemColors.ActiveCaptionTextBrushKey}}" Margin="5" FontSize="10" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" />
         </Grid>
         <TextBox x:Name="tbFilePath" Grid.Column="0" Grid.Row="1" VerticalAlignment="Top" Margin="5" Height="24" FontSize="14" Text="Path to ini file..." IsReadOnly="True" VerticalContentAlignment="Center" TextWrapping="NoWrap"/>
         <Button x:Name="btnBrowse" Content="Browse" Grid.Column="1" Grid.Row="1" Margin="5" Width="100" VerticalAlignment="Top" HorizontalAlignment="Center" Height="24" Click="btnBrowseClick"/>
         <ListView x:Name="lvItems" Background="{x:Null}" Foreground="Black" Grid.Row="2" Grid.ColumnSpan="2" Margin="5,0,0,0" BorderThickness="0"/>
-        <Grid Grid.Row="4" Grid.ColumnSpan="2" Background="Gray">
+        <Grid Grid.Row="4" Grid.ColumnSpan="2" Background="{DynamicResource {x:Static SystemColors.MenuBrushKey}}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
@@ -63,14 +65,14 @@
                 <ColumnDefinition Width=".7*"/>
                 <ColumnDefinition Width="auto"/>
             </Grid.ColumnDefinitions>
-            <Label Content="Show section:" Grid.Row="0" Grid.Column="0" Foreground="White" Margin="5" FontSize="16"/>
+            <Label Content="Show section:" Grid.Row="0" Grid.Column="0" Foreground="{DynamicResource {x:Static SystemColors.ActiveCaptionTextBrushKey}}" Margin="5" FontSize="16"/>
             <ComboBox x:Name="cbSections" Grid.Column="0" Grid.Row="1" Margin="5"/>
-            <Label Content="Show value by section's and value's name:" Grid.Row="0" Grid.Column="1" Foreground="White" Margin="5" FontSize="16" Grid.ColumnSpan="3"/>
+            <Label Content="Show value by section's and value's name:" Grid.Row="0" Grid.Column="1" Foreground="{DynamicResource {x:Static SystemColors.ActiveCaptionTextBrushKey}}" Margin="5" FontSize="16" Grid.ColumnSpan="3"/>
             <TextBox x:Name="tbSectionName" Margin="5" Height="24" FontSize="14" Text="Section name" Grid.Column="1" Grid.Row="1" VerticalContentAlignment="Center" TextWrapping="NoWrap"/>
             <TextBox x:Name="tbValueName" Margin="5" Height="24" FontSize="14" Text="Value name" Grid.Column="2" Grid.Row="1" VerticalContentAlignment="Center" TextWrapping="NoWrap"/>
             <Button x:Name="btnShow" Content="Show" Height="24" Margin="5" Grid.Column="3" Grid.Row="1" Width="100" Click="btnShowClick"/>
         </Grid>
-        <Grid Grid.ColumnSpan="2" Grid.Row="3" Background="Gray" VerticalAlignment="Center">
+        <Grid Grid.ColumnSpan="2" Grid.Row="3" Background="{DynamicResource {x:Static SystemColors.MenuBrushKey}}" VerticalAlignment="Center">
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="*"/>
@@ -79,8 +81,8 @@
                 <ColumnDefinition Width="2*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <Label Content="Write node (Section.Key=Value):" Grid.Column="0" Grid.Row="0" Foreground="White" Margin="5" FontSize="16"/>
-            <Label Content="Delete node:" Grid.Column="1" Grid.Row="0" Foreground="White" Margin="5" FontSize="16"/>
+            <Label Content="Write node (Section.Key=Value):" Grid.Column="0" Grid.Row="0" Foreground="{DynamicResource {x:Static SystemColors.ActiveCaptionTextBrushKey}}" Margin="5" FontSize="16"/>
+            <Label Content="Delete node:" Grid.Column="1" Grid.Row="0" Foreground="{DynamicResource {x:Static SystemColors.ActiveCaptionTextBrushKey}}" Margin="5" FontSize="16"/>
             <Grid Grid.Column="0" Grid.Row="1" VerticalAlignment="Top">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
@@ -89,7 +91,7 @@
                     <ColumnDefinition Width="auto"/>
                 </Grid.ColumnDefinitions>
                 <TextBox x:Name="tbAddKey" Margin="5" Height="24" FontSize="14" Text="Key" Grid.Column="0" VerticalContentAlignment="Center" TextWrapping="NoWrap"/>
-                <Label Content="=" Grid.Column="1" Foreground="White" Padding="5" FontSize="16"/>
+                <Label Content="=" Grid.Column="1" Foreground="{DynamicResource {x:Static SystemColors.ActiveCaptionTextBrushKey}}" Padding="5" FontSize="16"/>
                 <TextBox x:Name="tbAddValue" Margin="5" Height="24" FontSize="14" Text="Value" Grid.Column="2" VerticalContentAlignment="Center" TextWrapping="NoWrap"/>
                 <Button x:Name="btnAdd" Content="Add" Height="24" Margin="5" Grid.Column="3" Width="100" Click="btnAddClick"/>
             </Grid>
@@ -102,6 +104,6 @@
                 <Button x:Name="btnDelete" Content="Delete" Height="24" Margin="5" Grid.Column="1" Width="100" Click="btnDeleteClick"/>
             </Grid>
         </Grid>
-        <Label x:Name="lblStatus" Content="Ready" Grid.Row="5" Grid.ColumnSpan="2" Foreground="White" Padding="5" FontSize="16" Background="Gray"/>
+        <Label x:Name="lblStatus" Content="Ready" Grid.Row="5" Grid.ColumnSpan="2" Foreground="{DynamicResource {x:Static SystemColors.ActiveCaptionTextBrushKey}}" Padding="5" FontSize="16" Background="{DynamicResource {x:Static SystemColors.MenuBrushKey}}"/>
     </Grid>
 </Window>

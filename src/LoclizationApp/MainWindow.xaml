@@ -9,7 +9,7 @@
         MinWidth="800"
         Height="600" 
         Width="800"
-        Background="LightGoldenrodYellow" 
+        Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
         Icon="uk.ico" 
         WindowStartupLocation="CenterScreen"
         Drop="windowFileDrow"
@@ -28,7 +28,7 @@
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
-        <Grid Grid.Row="0" Grid.ColumnSpan="2" Background="PaleGoldenrod">
+        <Grid Grid.Row="0" Grid.ColumnSpan="2" Background="{DynamicResource {x:Static SystemColors.MenuBrushKey}}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="200px"/>
                 <ColumnDefinition Width="200px"/>
@@ -39,19 +39,19 @@
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
-            <Label Content="Main locale:" Grid.Row="0" Grid.Column="0" Foreground="Black" Margin="5" FontSize="16" />
+            <Label Content="Main locale:" Grid.Row="0" Grid.Column="0" Foreground="{DynamicResource {x:Static SystemColors.ActiveCaptionTextBrushKey}}" Margin="5" FontSize="16" />
             <ComboBox x:Name="cbMainLocal" Margin="5" Grid.Column="0" Grid.Row="1"/>
-            <Label Content="Display locales:" Grid.Row="0" Grid.Column="1" Foreground="Black" Margin="5" FontSize="16" />
+            <Label Content="Display locales:" Grid.Row="0" Grid.Column="1" Foreground="{DynamicResource {x:Static SystemColors.ActiveCaptionTextBrushKey}}" Margin="5" FontSize="16" />
             <ComboBox x:Name="cbLocales" Margin="5" Grid.Column="1" Grid.Row="1"/>
-            <Label Content="Locales Editor 1.0.0.0 by Verloka Vadim" Grid.Row="0" Grid.Column="2" Foreground="Black" Margin="5" FontSize="16" HorizontalContentAlignment="Right" />
-            <Label Content="https://verloka.github.io" Grid.Row="1" Grid.Column="2" Foreground="Black" Margin="5" FontSize="10" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" />
-            <CheckBox x:Name="cbSave" Grid.Row="2" Grid.ColumnSpan="2" Margin="5" Content="Save after any action with data" FontSize="16" VerticalContentAlignment="Center"/>
+            <Label Content="Locales Editor 1.0.0.0 by Verloka Vadim" Grid.Row="0" Grid.Column="2" Foreground="{DynamicResource {x:Static SystemColors.ActiveCaptionTextBrushKey}}" Margin="5" FontSize="16" HorizontalContentAlignment="Right" />
+            <Label Content="https://verloka.github.io" Grid.Row="1" Grid.Column="2" Foreground="{DynamicResource {x:Static SystemColors.ActiveCaptionTextBrushKey}}" Margin="5" FontSize="10" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" />
+            <CheckBox x:Name="cbSave" Grid.Row="2" Grid.ColumnSpan="2" Margin="5" Content="Save after any action with data" FontSize="16" VerticalContentAlignment="Center" Foreground="{DynamicResource {x:Static SystemColors.ActiveCaptionTextBrushKey}}"/>
             <Button x:Name="btnSave" Content="Save locales file" Grid.Column="2" Grid.Row="2" Margin="5" Width="100" VerticalAlignment="Top" HorizontalAlignment="Right" Height="24" Click="btnSaveClick"/>
         </Grid>
         <TextBox x:Name="tbFilePath" Grid.Column="0" Grid.Row="1" VerticalAlignment="Top" Margin="5,5,5,0" Height="24" FontSize="14" Text="Path to local file..." IsReadOnly="True" VerticalContentAlignment="Center" TextWrapping="NoWrap"/>
         <Button x:Name="btnBrowse" Content="Browse" Grid.Column="1" Grid.Row="1" Margin="5" Width="100" VerticalAlignment="Top" HorizontalAlignment="Center" Height="24" Click="btnBrowseClick"/>
-        <DataGrid x:Name="dgData" Grid.Row="2" Grid.ColumnSpan="2" Background="{x:Null}" BorderBrush="{x:Null}" BorderThickness="0" AllowDrop="True" SelectionMode="Single" AutoGenerateColumns="False" CanUserReorderColumns="False" MinColumnWidth="50" VerticalGridLinesBrush="LightGray" AlternatingRowBackground="LightGoldenrodYellow" RowBackground="PaleGoldenrod" CellEditEnding="dgDataCellEditEnding" GridLinesVisibility="Vertical" CanUserAddRows="false" SelectionUnit="Cell" />
-        <Grid Grid.Row="3" Grid.ColumnSpan="2" Background="PaleGoldenrod">
+        <DataGrid x:Name="dgData" Grid.Row="2" Grid.ColumnSpan="2" Background="{x:Null}" BorderBrush="{x:Null}" BorderThickness="0" AllowDrop="True" SelectionMode="Single" AutoGenerateColumns="False" CanUserReorderColumns="False" MinColumnWidth="50" VerticalGridLinesBrush="LightGray" RowBackground="{DynamicResource {x:Static SystemColors.MenuBrushKey}}" CellEditEnding="dgDataCellEditEnding" GridLinesVisibility="Vertical" CanUserAddRows="false" SelectionUnit="Cell" AlternatingRowBackground="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" />
+        <Grid Grid.Row="3" Grid.ColumnSpan="2" Background="{DynamicResource {x:Static SystemColors.MenuBrushKey}}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
@@ -62,14 +62,14 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="auto"/>
             </Grid.ColumnDefinitions>
-            <Label Content="Adding key to all locales:" Grid.Row="0" Grid.Column="0" Foreground="Black" Margin="5" FontSize="16" />
+            <Label Content="Adding key to all locales:" Grid.Row="0" Grid.Column="0" Foreground="{DynamicResource {x:Static SystemColors.ActiveCaptionTextBrushKey}}" Margin="5" FontSize="16" />
             <TextBox x:Name="tbNodeAddName" Grid.Row="1" Grid.Column="0" VerticalAlignment="Top" Margin="5" Height="24" FontSize="14" Text="Name" VerticalContentAlignment="Center" TextWrapping="NoWrap"/>
             <Button x:Name="btnAddNode" Content="Add key" Grid.Row="1" Grid.Column="1" Margin="5" Width="100" VerticalAlignment="Top" HorizontalAlignment="Center" Height="24" Click="btnAddNodeClick"/>
-            <Label Content="Removing key from all locales:" Grid.Row="0" Grid.Column="2" Foreground="Black" Margin="5" FontSize="16" />
+            <Label Content="Removing key from all locales:" Grid.Row="0" Grid.Column="2" Foreground="{DynamicResource {x:Static SystemColors.ActiveCaptionTextBrushKey}}" Margin="5" FontSize="16" />
             <TextBox x:Name="tbNodeRemoveName" Grid.Row="1" Grid.Column="2" VerticalAlignment="Top" Margin="5" Height="24" FontSize="14" Text="Name" VerticalContentAlignment="Center" TextWrapping="NoWrap"/>
             <Button x:Name="btnRemoveNode" Content="Remove key" Grid.Row="1" Grid.Column="3" Margin="5" Width="100" VerticalAlignment="Top" HorizontalAlignment="Center" Height="24" Click="btnRemoveNodeClick"/>
         </Grid>
-        <Grid Grid.Row="4" Grid.ColumnSpan="2" Background="PaleGoldenrod">
+        <Grid Grid.Row="4" Grid.ColumnSpan="2" Background="{DynamicResource {x:Static SystemColors.MenuBrushKey}}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
@@ -81,16 +81,16 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="auto"/>
             </Grid.ColumnDefinitions>
-            <Label Content="Adding, locale name:" Grid.Row="0" Grid.Column="0" Foreground="Black" Margin="5" FontSize="16" />
+            <Label Content="Adding, locale name:" Grid.Row="0" Grid.Column="0" Foreground="{DynamicResource {x:Static SystemColors.ActiveCaptionTextBrushKey}}" Margin="5" FontSize="16" />
             <TextBox x:Name="tbLocName" Grid.Column="0" Grid.Row="1" VerticalAlignment="Top" Margin="5" Height="24" FontSize="14" Text="Name" VerticalContentAlignment="Center" TextWrapping="NoWrap"/>
-            <Label Content="Locale code:" Grid.Row="0" Grid.Column="1" Foreground="Black" Margin="5" FontSize="16" />
+            <Label Content="Locale code:" Grid.Row="0" Grid.Column="1" Foreground="{DynamicResource {x:Static SystemColors.ActiveCaptionTextBrushKey}}" Margin="5" FontSize="16" />
             <TextBox x:Name="tbLocCode" Grid.Column="1" Grid.Row="1" VerticalAlignment="Top" Margin="5" Height="24" FontSize="14" Text="Code" VerticalContentAlignment="Center" TextWrapping="NoWrap"/>
             <Button x:Name="btnAddLocal" Content="Add locale" Grid.Column="2" Grid.Row="1" Margin="5" Width="100" VerticalAlignment="Top" HorizontalAlignment="Center" Height="24" Click="btnAddLocalClick"/>
-            <Label Content="Remove locale:" Grid.Row="0" Grid.Column="3" Foreground="Black" Margin="5" FontSize="16" />
+            <Label Content="Remove locale:" Grid.Row="0" Grid.Column="3" Foreground="{DynamicResource {x:Static SystemColors.ActiveCaptionTextBrushKey}}" Margin="5" FontSize="16" />
             <ComboBox x:Name="cbRemovingLocal" Margin="5" Grid.Column="3" Grid.Row="1"/>
             <Button x:Name="btnRemoveLocal" Content="Remove locale" Grid.Column="4" Grid.Row="1" Margin="5" Width="100" VerticalAlignment="Top" HorizontalAlignment="Center" Height="24" Click="btnRemoveLocalClick"/>
         </Grid>
-        <Grid Grid.Row="5" Grid.ColumnSpan="2" Background="PaleGoldenrod">
+        <Grid Grid.Row="5" Grid.ColumnSpan="2" Background="{DynamicResource {x:Static SystemColors.MenuBrushKey}}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
@@ -100,11 +100,11 @@
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            <Label Content="Rename locale:" Grid.Row="0" Grid.Column="0" Foreground="Black" Margin="5" FontSize="16" />
+            <Label Content="Rename locale:" Grid.Row="0" Grid.Column="0" Foreground="{DynamicResource {x:Static SystemColors.ActiveCaptionTextBrushKey}}" Margin="5" FontSize="16" />
             <ComboBox x:Name="cbLocalesRename" Margin="5" Grid.Column="0"  Grid.Row="1"/>
             <TextBox x:Name="tbRename" Grid.Column="1" Grid.Row="1" VerticalAlignment="Top" Margin="5" Height="24" FontSize="14" Text="" VerticalContentAlignment="Center" TextWrapping="NoWrap"/>
             <Button x:Name="btnRename" Content="Rename locale" Grid.Column="2" Grid.Row="1" Margin="5" Width="100" VerticalAlignment="Top" HorizontalAlignment="Center" Height="24" Click="btnRenameClick"/>
         </Grid>
-        <Label x:Name="lblStatus" Content="Ready" Grid.Row="6" Grid.ColumnSpan="2" Foreground="Black" Padding="5" FontSize="16" Background="PaleGoldenrod"/>
+        <Label x:Name="lblStatus" Content="Ready" Grid.Row="6" Grid.ColumnSpan="2" Foreground="{DynamicResource {x:Static SystemColors.ActiveCaptionTextBrushKey}}" Padding="5" FontSize="16" Background="{DynamicResource {x:Static SystemColors.MenuBrushKey}}"/>
     </Grid>
 </Window>

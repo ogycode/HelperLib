@@ -1,7 +1,6 @@
 ﻿using Microsoft.Win32;
 using System;
 using System.Linq;
-using System.Text;
 using System.Windows;
 
 namespace INIApp
