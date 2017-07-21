@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Verloka.HelperLib.Localization
+﻿namespace Verloka.HelperLib.Localization
 {
     public class Language
     {

@@ -39,8 +39,10 @@ namespace Verloka.HelperLib.INI
 
         public Content()
         {
-            Sections = new List<Section>();
-            Sections.Add(new Section());
+            Sections = new List<Section>
+            {
+                new Section()
+            };
         }
 
         public bool Write<T>(string key, T value)

@@ -80,7 +80,7 @@ namespace Verloka.HelperLib.Localization
         }
         public bool AddKey(string key)
         {
-            if(isValidKey(key))
+            if(IsValidKey(key))
             {
                 foreach (var item in file.Sections)
                     if (!item.IsRoot)
@@ -150,7 +150,7 @@ namespace Verloka.HelperLib.Localization
             file.Save();
         }
 
-        bool isValidKey(string key)
+        bool IsValidKey(string key)
         {
             switch (key)
             {

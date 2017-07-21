@@ -8,6 +8,7 @@ namespace Verloka.HelperLib.INI
     public class INIFile
     {
         public event Action<string> IsNotFound;
+        public event Action<Exception> SaveException;
         
         public string Separator { get; private set; }
         public string Comment { get; private set; }
@@ -101,6 +102,18 @@ namespace Verloka.HelperLib.INI
         {
             return ReadFromPath(path, separ, comm, lb, rb).ToDictionary();
         }
+        public static IDictionary<string, object> GetDictionaryText(string text)
+        {
+            return ReadFromText(text, "=", "#", "[", "]").ToDictionary();
+        }
+        public static IDictionary<string, object> GetDictionaryText(string text, string separ, string comm)
+        {
+            return ReadFromText(text, separ, comm, "[", "]").ToDictionary();
+        }
+        public static IDictionary<string, object> GetDictionaryText(string text, string separ, string comm, string lb, string rb)
+        {
+            return ReadFromText(text, separ, comm, lb, rb).ToDictionary();
+        }
 
         static Content ReadFromPath(string path, string separator, string comment, string lb, string rb)
         {
@@ -175,7 +188,7 @@ namespace Verloka.HelperLib.INI
 
             return con;
         }
-        static void SaveToFile(Content cont, string path, string separator, string comment, string lb, string rb, bool repeat = false)
+        void SaveToFile(Content cont, string path, string separator, string comment, string lb, string rb, bool repeat = false)
         {
             try
             {
@@ -210,6 +223,8 @@ namespace Verloka.HelperLib.INI
             {
                 if (!repeat)
                     SaveToFile(cont, path, separator, comment, lb, rb, true);
+                else
+                    SaveException?.Invoke(e);
             }
         }
     }
