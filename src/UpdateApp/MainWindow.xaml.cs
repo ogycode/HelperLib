@@ -1,18 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using Microsoft.Win32;
+using System;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using Verloka.HelperLib.Update;
 
 namespace UpdateApp
@@ -21,6 +11,11 @@ namespace UpdateApp
     {
         Manager update;
         UpdateElement newElement;
+        public bool IsEdit
+        {
+            get => lblEditMode.Visibility == Visibility.Visible ? true : false;
+            set => lblEditMode.Visibility = value ? Visibility.Visible : Visibility.Collapsed;
+        }
 
         public MainWindow()
         {
@@ -58,6 +53,8 @@ namespace UpdateApp
             tbDate.IsEnabled = mode;
             btnDone.IsEnabled = mode;
             btnSetDateNow.IsEnabled = mode;
+
+            lvElements.IsEnabled = !mode;
         }
         void SetupDate()
         {
@@ -68,6 +65,48 @@ namespace UpdateApp
             }
             tbDate.Text = DateTime.Now.ToLongDateString();
             newElement.SetDate(DateTime.Now.ToOADate());
+        }
+        void NullTb()
+        {
+            tbTitle.Text = "Title";
+            tbChangnote.Text = "Log";
+            tbMajor.Text = "1";
+            tbMinor.Text = "0";
+            tbBuild.Text = "0";
+            tbRevision.Text = "0";
+            tbExeFile.Text = "setup.exe's url...";
+            tbZipFile.Text = "archive.zip's url...";
+        }
+        void AddElement()
+        {
+            if (update.AddElement(newElement))
+            {
+                lblStatus.Content = $"New update by version({tbMajor.Text}.{tbMinor.Text}.{tbBuild.Text}.{tbRevision.Text}) added!";
+
+                update.Save();
+                UpdateData();
+                newElement = null;
+            }
+            else
+                lblStatus.Content = $"New update by version({tbMajor.Text}.{tbMinor.Text}.{tbBuild.Text}.{tbRevision.Text}) can not be edit!";
+        }
+        void EditElement()
+        {
+            if (lvElements.SelectedIndex == -1)
+            {
+                lblStatus.Content = "Update by can not be edit!";
+                return;
+            }
+
+            if (update.RemoveElement(lvElements.SelectedItem as UpdateElement) && update.AddElement(newElement))
+            {
+                lblStatus.Content = $"Update by version({tbMajor.Text}.{tbMinor.Text}.{tbBuild.Text}.{tbRevision.Text}) edited!";
+                NullTb();
+                update.Save();
+                UpdateData();
+            }
+
+            IsEdit = false;
         }
 
         private void windowLoaded(object sender, RoutedEventArgs e)
@@ -87,7 +126,7 @@ namespace UpdateApp
                 {
                     string path = $"{fbd.SelectedPath}\\";
                     string save = $"{Environment.GetFolderPath(Environment.SpecialFolder.Desktop)}\\archive.zip";
-                    await Verloka.HelperLib.Update.Worker.Archive(path, save);
+                    await Worker.Archive(path, save);
 
                     MessageBox.Show(this, $"Archive was created and saved on your desktop\nFROM: {path}\nTO: {save}", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
@@ -125,6 +164,7 @@ namespace UpdateApp
         }
         private void btnNewClick(object sender, RoutedEventArgs e)
         {
+            NullTb();
             SetEnable(true);
             newElement = new UpdateElement();
             SetupDate();
@@ -179,28 +219,74 @@ namespace UpdateApp
             newElement.SetEXE(tbExeFile.Text);
             newElement.SetZIP(tbZipFile.Text);
 
-            if(update.AddElement(newElement))
+            SetupDate();
+
+            if (IsEdit)
+                EditElement();
+            else
+                AddElement();
+            
+            NullTb();
+            SetEnable(false);
+        }
+        private void btnDeleteClick(object sender, RoutedEventArgs e)
+        {
+            if (lvElements.SelectedIndex == -1)
+                return;
+
+            var ver = (lvElements.SelectedItem as UpdateElement).GetVersionNumber();
+            if (update.RemoveElement(ver))
             {
+                lblStatus.Content = $"Update by verison {ver} removed";
                 update.Save();
                 UpdateData();
-                lblStatus.Content = $"New update by version({tbMajor.Text}.{tbMinor.Text}.{tbBuild.Text}.{tbRevision.Text}) added!";
-                newElement = null;
             }
             else
-                lblStatus.Content = $"New update by version({tbMajor.Text}.{tbMinor.Text}.{tbBuild.Text}.{tbRevision.Text}) can not be add!";
+                lblStatus.Content = $"Update by verison {ver} can not be remove";
+        }
+        private void btnEditClick(object sender, RoutedEventArgs e)
+        {
+            if (lvElements.SelectedIndex == -1)
+                return;
 
-            SetEnable(false);
+            IsEdit = true;
 
-            tbTitle.Text = "Title...";
-            tbChangnote.Text = "Log...";
-            tbMajor.Text = "1";
-            tbMinor.Text = "0";
-            tbBuild.Text = "0";
-            tbRevision.Text = "0";
-            tbExeFile.Text = "exe file path...";
-            tbZipFile.Text = "zip file path";
+            UpdateElement elem = lvElements.SelectedItem as UpdateElement;
+            newElement = new UpdateElement();
 
-            SetEnable(false);
+            tbTitle.Text = elem.GetTitle();
+            tbChangnote.Text = elem.GetChangeNote();
+            tbExeFile.Text = elem.GetEXE();
+            tbZipFile.Text = elem.GetZIP();
+            tbMajor.Text = elem.GetVersionNumber().GetMajor().ToString();
+            tbMinor.Text = elem.GetVersionNumber().GetMinor().ToString();
+            tbBuild.Text = elem.GetVersionNumber().GetBuild().ToString();
+            tbRevision.Text = elem.GetVersionNumber().GetRevision().ToString();
+            tbDate.Text = DateTime.FromOADate(elem.GetDate()).ToLongDateString();
+
+            SetEnable(true);
+        }
+        private void btnBrowseClick(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+
+            ofd.InitialDirectory = "c:\\";
+            ofd.Filter = "update files (*.ini)|*.ini";
+            ofd.FilterIndex = 2;
+            ofd.RestoreDirectory = true;
+            ofd.Multiselect = false;
+
+            if (ofd.ShowDialog() == true)
+            {
+                try
+                {
+                    OpenFile(ofd.FileName);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error: Could not read file from disk. Original error: " + ex.Message);
+                }
+            }
         }
     }
 }
