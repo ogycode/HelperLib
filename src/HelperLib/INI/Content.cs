@@ -1,10 +1,25 @@
-﻿using System.Collections.Generic;
+﻿/*
+ * Content.cs
+ * Verloka Vadim, 2017
+ * https://verloka.github.io
+ */
+
+using System.Collections.Generic;
 
 namespace Verloka.HelperLib.INI
 {
+    /// <summary>
+    /// Class for storing sections of *.ini file
+    /// </summary>
     public class Content
     {
+        /// <summary>
+        /// List with all section of file and with root section
+        /// </summary>
         public List<Section> Sections { get; private set; }
+        /// <summary>
+        /// Root section, section without name
+        /// </summary>
         public Section Root
         {
             get
@@ -37,6 +52,10 @@ namespace Verloka.HelperLib.INI
             }
         }
 
+        /// <summary>
+        /// Initializes a new instance of the Content class
+        /// Default: root section create auto
+        /// </summary>
         public Content()
         {
             Sections = new List<Section>
@@ -45,9 +64,16 @@ namespace Verloka.HelperLib.INI
             };
         }
 
-        public bool Write<T>(string key, T value)
+        /// <summary>
+        /// Write to file parametr
+        /// Key mast have the form - SectionName.KeyName, if not value will be writed in root
+        /// </summary>
+        /// <param name="key">Key of value</param>
+        /// <param name="value">Value</param>
+        /// <returns></returns>
+        public bool Write(string key, object value)
         {
-            if (string.IsNullOrWhiteSpace(key) || Equals(value, default(T)))
+            if (string.IsNullOrWhiteSpace(key) || Equals(value, null))
                 return false;
 
             string[] part = key.Split('.');
@@ -65,7 +91,13 @@ namespace Verloka.HelperLib.INI
 
             return sec.Add(part[1], value);
         }
-        public bool RemoveNode(string key)
+        /// <summary>
+        /// Remove key from section
+        /// Key mast have the form - SectionName.KeyName, if not key will be removed from root
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public bool RemoveKey(string key)
         {
             if (string.IsNullOrWhiteSpace(key))
                 return false;
@@ -77,12 +109,18 @@ namespace Verloka.HelperLib.INI
 
             return GetSection(part[0]).Remove(part[1]);
         }
-        public bool RemoveSection(string key)
+        /// <summary>
+        /// Remove sectoin from file
+        /// Root section can not be removed
+        /// </summary>
+        /// <param name="name">Name of section</param>
+        /// <returns>True - section was removed, False - section can not be removed</returns>
+        public bool RemoveSection(string name)
         {
-            if (string.IsNullOrWhiteSpace(key) || key == "Root")
+            if (string.IsNullOrWhiteSpace(name) || name == "Root")
                 return false;
 
-            var sec = Sections.Find(s => s.Name == key);
+            var sec = Sections.Find(s => s.Name == name);
 
             if (sec == null)
                 return false;
@@ -91,6 +129,13 @@ namespace Verloka.HelperLib.INI
 
             return true;
         }
+        /// <summary>
+        /// Read value by key from file
+        /// Key mast have the form - SectionName.KeyName, if not value will be readed from root
+        /// </summary>
+        /// <typeparam name="T">Type of value</typeparam>
+        /// <param name="key">Key of value</param>
+        /// <returns>If value not found then returned default value of type</returns>
         public T Read<T>(string key)
         {
             if (string.IsNullOrWhiteSpace(key))
@@ -108,13 +153,35 @@ namespace Verloka.HelperLib.INI
 
             return GetSection(part[0]).Read<T>(part[1]);
         }
-        public bool ContainsKey(string key)
+        /// <summary>
+        /// Checking if key contains in file
+        /// </summary>
+        /// <param name="key">Key</param>
+        /// <returns>True - key contains in one or few sections, False - key not found in file</returns>
+        public bool ContainsKeyFile(string key)
         {
             foreach (var item in Sections)
                 if (item.GetContent().ContainsKey(key))
                     return true;
             return false;
         }
+        /// <summary>
+        /// Checking if key contains in concrete section
+        /// </summary>
+        /// <param name="name">Name of section</param>
+        /// <param name="key">Key</param>
+        /// <returns>True - the section contains key, False - key not found in section</returns>
+        public bool ContainsKeySection(string name, string key)
+        {
+            if (GetSection(name).GetContent().ContainsKey(key))
+                return true;
+            return false;
+        }
+        /// <summary>
+        /// Return section by name
+        /// </summary>
+        /// <param name="Name">Name of section what need find</param>
+        /// <returns>Section - find, Null - do not find</returns>
         public Section GetSection(string Name)
         {
             if (string.IsNullOrWhiteSpace(Name))
@@ -126,6 +193,11 @@ namespace Verloka.HelperLib.INI
 
             return null;
         }
+        /// <summary>
+        /// Convert file to dictionary when key have the form - SectionName.KeyName
+        /// Root section have not name
+        /// </summary>
+        /// <returns></returns>
         public IDictionary<string, object> ToDictionary()
         {
             Dictionary<string, object> dic = new Dictionary<string, object>();
