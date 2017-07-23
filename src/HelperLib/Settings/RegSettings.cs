@@ -1,16 +1,29 @@
-﻿using Microsoft.Win32;
+﻿/*
+ * RegSettings.cs
+ * Verloka Vadim, 2017
+ * https://verloka.github.io
+ */
+
+using Microsoft.Win32;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 
 namespace Verloka.HelperLib.Settings
 {
+    /// <summary>
+    /// Class for working with app's settings
+    /// </summary>
     public class RegSettings : IDisposable, IEnumerable
     {
         Dictionary<string, object> settings;
         RegistryKey Key;
         RegistryKey KeyCustom;
 
+        /// <summary>
+        /// Application name
+        /// </summary>
+        public string AppName { get; set; }
         public object this[string index]
         {
             set
@@ -18,8 +31,11 @@ namespace Verloka.HelperLib.Settings
                 SetValue(index, value);
             }
         }
-        public string AppName { get; set; }
 
+        /// <summary>
+        /// Initializes a new instance of the RegSettings class
+        /// </summary>
+        /// <param name="AppName">Name of application</param>
         public RegSettings(string AppName)
         {
             settings = new Dictionary<string, object>();
@@ -29,6 +45,11 @@ namespace Verloka.HelperLib.Settings
             Load();
         }
 
+        /// <summary>
+        /// Remove parametr from settings and register
+        /// </summary>
+        /// <param name="name">Name of param</param>
+        /// <returns>True - param removed</returns>
         public bool DeleteValue(string name)
         {
             if (settings.ContainsKey(name))
@@ -41,6 +62,13 @@ namespace Verloka.HelperLib.Settings
             }
             return false;
         }
+        /// <summary>
+        /// Edit conatains setting or add new
+        /// </summary>
+        /// <typeparam name="T">Type of your param</typeparam>
+        /// <param name="name">Name of param</param>
+        /// <param name="value">Param for write</param>
+        /// <returns>Param in converted to object</returns>
         public object SetValue<T>(string name, T value)
         {
             string obj;
@@ -61,6 +89,12 @@ namespace Verloka.HelperLib.Settings
 
             return value;
         }
+        /// <summary>
+        /// Return setting by name
+        /// </summary>
+        /// <typeparam name="T">Type of your param</typeparam>
+        /// <param name="name">Name of param</param>
+        /// <returns>Param</returns>
         public T GetValue<T>(string name)
         {
             if (settings.ContainsKey(name))
@@ -89,6 +123,13 @@ namespace Verloka.HelperLib.Settings
                 return (T)SetValue(name, instance);
             }
         }
+        /// <summary>
+        /// Return setting by name
+        /// </summary>
+        /// <typeparam name="T">Type of your param</typeparam>
+        /// <param name="name">Name of param</param>
+        /// <param name="defaultValue">Default value of param</param>
+        /// <returns>Param</returns>
         public T GetValue<T>(string name, T defaultValue)
         {
             if (settings.ContainsKey(name))
@@ -112,6 +153,9 @@ namespace Verloka.HelperLib.Settings
                 return (T)SetValue(name, defaultValue);
             }
         }
+        /// <summary>
+        /// Clear all settings
+        /// </summary>
         public void Clear()
         {
             var s = Key.GetValueNames();
@@ -171,6 +215,9 @@ namespace Verloka.HelperLib.Settings
         {
             Dispose(false);
         }
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources
+        /// </summary>
         public void Dispose()
         {
             Dispose(true);
@@ -178,6 +225,10 @@ namespace Verloka.HelperLib.Settings
         }
         #endregion
 
+        /// <summary>
+        /// Returns an enumerator that iterates through a collection
+        /// </summary>
+        /// <returns>Enumerator</returns>
         public IEnumerator GetEnumerator()
         {
             return ((IEnumerable)settings).GetEnumerator();
