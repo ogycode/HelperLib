@@ -212,7 +212,7 @@ namespace UpdateApp
                 lblStatus.Content = $"Path(url) to zip file of update can not be empty";
                 return;
             }
-
+            
             newElement.SetTitle(tbTitle.Text);
             newElement.SetChangeNote(tbChangnote.Text);
             newElement.SetVersionNumber($"{tbMajor.Text}.{tbMinor.Text}.{tbBuild.Text}.{tbRevision.Text}");
@@ -287,6 +287,22 @@ namespace UpdateApp
                     MessageBox.Show("Error: Could not read file from disk. Original error: " + ex.Message);
                 }
             }
+        }
+        private void lvElementsSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (lvElements.SelectedIndex == -1)
+                return;
+
+            UpdateElement elem = lvElements.SelectedItem as UpdateElement;
+            tbTitle.Text = elem.GetTitle();
+            tbChangnote.Text = elem.GetChangeNote();
+            tbExeFile.Text = elem.GetEXE();
+            tbZipFile.Text = elem.GetZIP();
+            tbMajor.Text = elem.GetVersionNumber().GetMajor().ToString();
+            tbMinor.Text = elem.GetVersionNumber().GetMinor().ToString();
+            tbBuild.Text = elem.GetVersionNumber().GetBuild().ToString();
+            tbRevision.Text = elem.GetVersionNumber().GetRevision().ToString();
+            tbDate.Text = DateTime.FromOADate(elem.GetDate()).ToLongDateString();
         }
     }
 }

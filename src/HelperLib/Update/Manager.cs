@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
-using System.Runtime.Serialization.Json;
-using System.Text;
 using System.Linq;
 
 namespace Verloka.HelperLib.Update
@@ -16,6 +14,7 @@ namespace Verloka.HelperLib.Update
         public const string KEY_ZIP = "zip";
         public const string KEY_DATE = "date";
         public const string KEY_VERSION = "version";
+        public const string KEY_CHANENOTE_SEPARTOR = "-";
 
         public event Action<string> LoadError;
 
@@ -158,25 +157,42 @@ namespace Verloka.HelperLib.Update
                 return;
 
             foreach (var item in file.Sections)
-                if (!item.IsRoot)
+                if (!item.IsRoot && !item.Name.EndsWith($"{KEY_CHANENOTE_SEPARTOR}{KEY_CHANGENOTE}"))
                 {
+                    //Other
                     UpdateElement element = new UpdateElement();
                     element.SetGUID(item.Name);
                     element.SetTitle(item[KEY_TITLE].ToString());
-                    element.SetChangeNote(item[KEY_CHANGENOTE].ToString());
                     element.SetVersionNumber(item[KEY_VERSION].ToString());
                     element.SetEXE(item[KEY_EXE].ToString());
                     element.SetZIP(item[KEY_ZIP].ToString());
                     element.SetDate(item.Read<double>(KEY_DATE));
+
+                    //Changenote
+                    if (item.Read<int>(KEY_CHANGENOTE) != 0)
+                    {
+                        var dic = file[$"{element.GetGUID()}{KEY_CHANENOTE_SEPARTOR}{KEY_CHANGENOTE}"].GetPureContent();
+                        string log = "";
+                        foreach (var strings in dic)
+                            log += $"{strings.Value}\n";
+                        element.SetChangeNote(log);
+                    }
+                    else
+                        element.SetChangeNote(string.Empty);
 
                     Elements.Add(element);
                 }
         }
         void Add(UpdateElement elem)
         {
-            //file.Sections.Add(new INI.Section(elem.GetGUID()));
+            //changenote
+            string[] part = elem.GetChangeNote().Split('\n');
+            for (int i = 0; i < part.Length; i++)
+                file[$"{elem.GetGUID()}{KEY_CHANENOTE_SEPARTOR}{KEY_CHANGENOTE}"][$"line_{i}"] = part[i];
+            file[elem.GetGUID()][KEY_CHANGENOTE] = part.Length;
+
+            //other
             file[elem.GetGUID()][KEY_TITLE] = elem.GetTitle();
-            file[elem.GetGUID()][KEY_CHANGENOTE] = elem.GetChangeNote();
             file[elem.GetGUID()][KEY_VERSION] = elem.GetVersionNumber();
             file[elem.GetGUID()][KEY_EXE] = elem.GetEXE();
             file[elem.GetGUID()][KEY_ZIP] = elem.GetZIP();
