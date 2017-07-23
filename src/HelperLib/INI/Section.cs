@@ -108,7 +108,9 @@ namespace Verloka.HelperLib.INI
         /// <param name="name">Name of section</param>
         public void SetName(string name)
         {
-            Name = name;
+            IsRoot = name == "Root" || string.IsNullOrWhiteSpace(name) ? true : false;
+
+            Name = string.IsNullOrWhiteSpace(name) ? "Root" : name;
         }
 
         /// <summary>
