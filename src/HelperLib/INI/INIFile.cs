@@ -51,14 +51,8 @@ namespace Verloka.HelperLib.INI
         public string RightBracket { get; private set; }
         public Section this[string name]
         {
-            get
-            {
-                return content[name];
-            }
-            set
-            {
-                content[name] = value;
-            }
+            get => content[name];
+            set => content[name] = value;
         }
 
         Content content;
@@ -117,8 +111,8 @@ namespace Verloka.HelperLib.INI
 
         /// <summary>
         /// Read value by Key
-        /// Key mast have the form - SectionName.KeyName
-        /// If key has only KeyName then this key will be search in root section
+        /// <para>Key mast have the form - SectionName.KeyName
+        /// If key has only KeyName then this key will be search in root section</para>
         /// </summary>
         /// <typeparam name="T">Type of value</typeparam>
         /// <param name="key">Key</param>
@@ -134,7 +128,7 @@ namespace Verloka.HelperLib.INI
         }
         /// <summary>
         /// Write value to file
-        /// If key has only KeyName then value will be written to root
+        /// <para>If key has only KeyName then value will be written to root</para>
         /// </summary>
         /// <param name="key">Key of value</param>
         /// <param name="value">Value</param>
@@ -145,7 +139,7 @@ namespace Verloka.HelperLib.INI
         }
         /// <summary>
         /// Remove key from file
-        /// If key has only KeyName then key will be removed from root
+        /// <para>If key has only KeyName then key will be removed from root</para>
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
@@ -176,8 +170,7 @@ namespace Verloka.HelperLib.INI
         }
         /// <summary>
         /// Convert *.ini file to dictionary
-        /// Key have the form like this - SectionName.KeyName
-        /// Ex. SectionName.KeyName = Value
+        /// <para>Key have the form like this - SectionName.KeyName (Example: SectionName.KeyName = Value)</para>
         /// </summary>
         /// <returns>Dictionary with content of section</returns>
         public IDictionary<string, object> ToDictionary()

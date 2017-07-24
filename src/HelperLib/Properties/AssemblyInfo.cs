@@ -1,5 +1,4 @@
 ﻿using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 [assembly: AssemblyTitle("HelperLib")]
@@ -15,5 +14,5 @@ using System.Runtime.InteropServices;
 
 [assembly: Guid("243ae53e-b468-4498-a190-2bc835477f2c")]
 
-[assembly: AssemblyVersion("1.4.0.2")]
-[assembly: AssemblyFileVersion("1.4.0.2")]
+[assembly: AssemblyVersion("1.4.0.3")]
+[assembly: AssemblyFileVersion("1.4.0.3")]

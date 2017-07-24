@@ -1,4 +1,10 @@
-﻿using System;
+﻿/*
+ * Manager.cs
+ * Verloka Vadim, 2017
+ * https://verloka.github.io
+ */
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
@@ -6,6 +12,9 @@ using System.Linq;
 
 namespace Verloka.HelperLib.Update
 {
+    /// <summary>
+    /// Class fo work with update of application
+    /// </summary>
     public class Manager
     {
         public const string KEY_TITLE = "title";
@@ -16,23 +25,44 @@ namespace Verloka.HelperLib.Update
         public const string KEY_VERSION = "version";
         public const string KEY_CHANENOTE_SEPARTOR = "-";
 
+        /// <summary>
+        /// Occurs when file can not load
+        /// </summary>
         public event Action<string> LoadError;
-
+        /// <summary>
+        /// Occurs when any exception by WebClient
+        /// </summary>
         public event Action<WebException> WebException;
 
+        /// <summary>
+        /// <see cref="List{UpdateElement}"/> with all versions of app
+        /// </summary>
         public List<UpdateElement> Elements { get; private set; }
+        /// <summary>
+        /// Newest update
+        /// </summary>
         public UpdateElement Last { get => Elements.Aggregate((i, j) => i.GetVersionNumber() > j.GetVersionNumber() ? i : j); }
+        /// <summary>
+        /// Url to *.ini file with update info
+        /// </summary>
         public string Url { get; private set; }
 
         INI.INIFile file;
         bool isLocale = false;
 
+        /// <summary>
+        /// Initializes a new instance of the Manager class
+        /// </summary>
+        /// <param name="Url">Url to *.ini file with update info</param>
         public Manager(string Url)
         {
             Elements = new List<UpdateElement>();
             this.Url = Url;
         }
 
+        /// <summary>
+        /// Load information about versions from web
+        /// </summary>
         public async void LoadFromWeb()
         {
             using (WebClient client = new WebClient())
@@ -48,6 +78,9 @@ namespace Verloka.HelperLib.Update
                 }
             }
         }
+        /// <summary>
+        /// Load information about versions from path, Edit mode is enabled
+        /// </summary>
         public void LoadFromPath()
         {
             if (!File.Exists(Url))
@@ -60,18 +93,41 @@ namespace Verloka.HelperLib.Update
             file = new INI.INIFile(Url, "=", ";");
             UpdateElements();
         }
+        /// <summary>
+        /// Compares your version with the newest
+        /// </summary>
+        /// <param name="ver">Installed app version</param>
+        /// <returns>True - new version is available</returns>
         public bool IsAvailable(Version ver)
         {
             return CheckVersion(ver);
         }
+        /// <summary>
+        /// Compares your version with the newest
+        /// </summary>
+        /// <param name="ver">Installed app version</param>
+        /// <returns>True - new version is available</returns>
         public bool IsAvailable(System.Version ver)
         {
             return CheckVersion(new Version(ver.Major, ver.Minor, ver.Build, ver.Revision));
         }
+        /// <summary>
+        /// Compares your version with the newest
+        /// </summary>
+        /// <param name="Major">Major number of installed app version</param>
+        /// <param name="Minor">Minor number of installed app version</param>
+        /// <param name="Build">Build number of installed app version</param>
+        /// <param name="Revision">Revision number of installed app version</param>
+        /// <returns>True - new version is available</returns>
         public bool IsAvailable(int Major, int Minor, int Build, int Revision)
         {
             return CheckVersion(new Version(Major, Minor, Build, Revision));
         }
+        /// <summary>
+        /// Add new update to *.ini file
+        /// </summary>
+        /// <param name="elem"></param>
+        /// <returns>True - add</returns>
         public bool AddElement(UpdateElement elem)
         {
             if (!isLocale)
@@ -85,6 +141,11 @@ namespace Verloka.HelperLib.Update
             UpdateElements();
             return true;
         }
+        /// <summary>
+        /// Remove update from *.ini file
+        /// </summary>
+        /// <param name="element">Concrete update for removing</param>
+        /// <returns>True - remove</returns>
         public bool RemoveElement(UpdateElement element)
         {
             if (!isLocale)
@@ -98,6 +159,11 @@ namespace Verloka.HelperLib.Update
             UpdateElements();
             return true;
         }
+        /// <summary>
+        /// Remove update from *.ini file
+        /// </summary>
+        /// <param name="version">Version of update what need remove</param>
+        /// <returns>True - remove</returns>
         public bool RemoveElement(Version version)
         {
             if (!isLocale)
@@ -111,6 +177,11 @@ namespace Verloka.HelperLib.Update
             UpdateElements();
             return true;
         }
+        /// <summary>
+        /// Remove update from *.ini file
+        /// </summary>
+        /// <param name="guid">GUID of update what need remove</param>
+        /// <returns>True - remove</returns>
         public bool RemoveElement(string guid)
         {
             if (!isLocale)
@@ -124,6 +195,10 @@ namespace Verloka.HelperLib.Update
             UpdateElements();
             return true;
         }
+        /// <summary>
+        /// Save changed to *.ini file
+        /// </summary>
+        /// <returns></returns>
         public bool Save()
         {
             if (!isLocale)
@@ -132,6 +207,9 @@ namespace Verloka.HelperLib.Update
             file.Save();
             return true;
         }
+        /// <summary>
+        /// Close object of <see cref="Manager"/>
+        /// </summary>
         public void Close()
         {
             file = null;

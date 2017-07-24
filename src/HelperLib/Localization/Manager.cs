@@ -82,7 +82,7 @@ namespace Verloka.HelperLib.Localization
             SetCurrent(file.Read<string>(CURRENT_KEY));
         }
         /// <summary>
-        /// Update List<Language> of available languages in locale file
+        /// Update <see cref="List{Language}"/> of available languages in locale file
         /// </summary>
         public void UpdateAvailableLanguages()
         {
@@ -198,7 +198,7 @@ namespace Verloka.HelperLib.Localization
             return res;
         }
         /// <summary>
-        /// Remove Language by name
+        /// Remove <see cref="Language"/> by name
         /// </summary>
         /// <param name="name">Language name</param>
         /// <returns>True - locale removed</returns>
@@ -209,7 +209,7 @@ namespace Verloka.HelperLib.Localization
             return res;
         }
         /// <summary>
-        /// Renane Language by name
+        /// Renane <see cref="Language"/> by name
         /// </summary>
         /// <param name="name">Old language name</param>
         /// <param name="newName">New language name</param>

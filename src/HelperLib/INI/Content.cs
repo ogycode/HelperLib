@@ -54,7 +54,7 @@ namespace Verloka.HelperLib.INI
 
         /// <summary>
         /// Initializes a new instance of the Content class
-        /// Default: root section create auto
+        /// <para>Default: <see cref="Root"/> section created auto</para>
         /// </summary>
         public Content()
         {
@@ -66,7 +66,7 @@ namespace Verloka.HelperLib.INI
 
         /// <summary>
         /// Write to file parametr
-        /// Key mast have the form - SectionName.KeyName, if not value will be writed in root
+        /// <para>Key mast have the form - SectionName.KeyName, if not value will be writed in <see cref="Root"/></para>
         /// </summary>
         /// <param name="key">Key of value</param>
         /// <param name="value">Value</param>
@@ -93,7 +93,7 @@ namespace Verloka.HelperLib.INI
         }
         /// <summary>
         /// Remove key from section
-        /// Key mast have the form - SectionName.KeyName, if not key will be removed from root
+        /// <para>Key mast have the form - SectionName.KeyName, if not key will be removed from <see cref="Root"/></para>
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
@@ -111,7 +111,7 @@ namespace Verloka.HelperLib.INI
         }
         /// <summary>
         /// Remove sectoin from file
-        /// Root section can not be removed
+        /// <para><see cref="Root"/> section can not be removed</para>
         /// </summary>
         /// <param name="name">Name of section</param>
         /// <returns>True - section was removed, False - section can not be removed</returns>
@@ -131,7 +131,7 @@ namespace Verloka.HelperLib.INI
         }
         /// <summary>
         /// Read value by key from file
-        /// Key mast have the form - SectionName.KeyName, if not value will be readed from root
+        /// <para>Key mast have the form - SectionName.KeyName, if not value will be readed from <see cref="Root"/></para>
         /// </summary>
         /// <typeparam name="T">Type of value</typeparam>
         /// <param name="key">Key of value</param>
@@ -195,7 +195,7 @@ namespace Verloka.HelperLib.INI
         }
         /// <summary>
         /// Convert file to dictionary when key have the form - SectionName.KeyName
-        /// Root section have not name
+        /// <para><see cref="Root"/> section have not name</para>
         /// </summary>
         /// <returns></returns>
         public IDictionary<string, object> ToDictionary()

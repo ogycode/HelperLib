@@ -42,7 +42,7 @@ namespace Verloka.HelperLib.INI
         /// <summary>
         /// Initializes a new instance of the Section class with concrete name
         /// </summary>
-        /// <param name="Name"></param>
+        /// <param name="Name">Name of section</param>
         public Section(string Name)
         {
             IsRoot = false;
@@ -128,8 +128,7 @@ namespace Verloka.HelperLib.INI
         }
         /// <summary>
         /// Content of section in the form of dictionary.
-        /// Key have the form like this - SectionName.KeyName
-        /// Ex. SectionName.KeyName = Value
+        /// <para>Key have the form like this - SectionName.KeyName (Example: SectionName.KeyName = Value)</para>
         /// </summary>
         /// <returns>Dictionary with content of section</returns>
         public IDictionary<string, object> GetContent()
@@ -146,8 +145,7 @@ namespace Verloka.HelperLib.INI
         }
         /// <summary>
         /// Content of section in the form of dictionary.
-        /// Key have the form like this = KeyName
-        /// Ex. KeyName = Value
+        /// <para>Key have the form like this = KeyName (Example: KeyName = Value)</para>
         /// </summary>
         /// <returns>Dictionary with content of section</returns>
         public IDictionary<string, object> GetPureContent()

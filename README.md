@@ -1,6 +1,6 @@
 [![Readme Photo](https://raw.githubusercontent.com/ogycode/HelperLib/master/merch/logo.png)](https://www.nuget.org/packages/Verloka.HelperLib)
 
-# HelperLib 1.4.0.2 
+# HelperLib 1.4.0.3
 
 [![NugetPhoto](https://raw.githubusercontent.com/ogycode/HelperLib/master/merch/nuget.png)](https://www.nuget.org/packages/Verloka.HelperLib)
 
