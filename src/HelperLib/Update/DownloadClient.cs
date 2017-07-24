@@ -1,4 +1,11 @@
-﻿using System;
+﻿/*
+ * DownloadClient.cs
+ * Verloka Vadim, 2017
+ * https://verloka.github.io
+ */
+
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -7,10 +14,22 @@ using System.Net;
 
 namespace Verloka.HelperLib.Update
 {
+    /// <summary>
+    /// Class for download files (single and multiple)
+    /// </summary>
     public class DownloadClient
     {
+        /// <summary>
+        /// Occurs when download progress was changed
+        /// </summary>
         public event Action<string, int, double> DownloadProgress;
+        /// <summary>
+        /// Occurs when download all files is completed
+        /// </summary>
         public event Action DownloadCompleted;
+        /// <summary>
+        /// Occurs when there are exceptions by WebClient
+        /// </summary>
         public event Action<WebException> WebException;
 
         WebClient webClient;
@@ -24,7 +43,12 @@ namespace Verloka.HelperLib.Update
         List<string> Files;
         int TotalPerc = -100;
         int FileCount = 0;
-        
+
+        /// <summary>
+        /// Initializes a new instance of the DownloadClient clas
+        /// </summary>
+        /// <param name="Files">List with files will be downloaded, can be empty</param>
+        /// <param name="SavePath">Destination location for save files</param>
         public DownloadClient(List<string> Files, string SavePath)
         {
             sw = new Stopwatch();
@@ -33,11 +57,17 @@ namespace Verloka.HelperLib.Update
             this.Files = Files;
             FileCount = this.Files.Count;
         }
-        
+
+        /// <summary>
+        /// Start download all files from list
+        /// </summary>
         public void Start()
         {
             PrepareDownload();
         }
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources
+        /// </summary>
         public void Close()
         {
             DownloadCompleted = null;
@@ -59,6 +89,11 @@ namespace Verloka.HelperLib.Update
 
             GC.SuppressFinalize(this);
         }
+        /// <summary>
+        /// Download single file
+        /// </summary>
+        /// <param name="urlAddress">Url's file</param>
+        /// <param name="location">Destination location for save files</param>
         public void DownloadFile(string urlAddress, string location)
         {
             sw.Start();

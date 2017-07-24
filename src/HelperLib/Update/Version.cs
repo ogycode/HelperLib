@@ -1,13 +1,26 @@
-﻿namespace Verloka.HelperLib.Update
+﻿/*
+ * Version.cs
+ * Verloka Vadim, 2017
+ * https://verloka.github.io
+ */
+
+namespace Verloka.HelperLib.Update
 {
+    /// <summary>
+    /// Class to store information about the update version number
+    /// </summary>
     public class Version
     {
         public const char SEPARATOR = '.';
-        private int major;
-        private int minor;
-        private int build;
-        private int revision;
 
+        int major;
+        int minor;
+        int build;
+        int revision;
+
+        /// <summary>
+        /// Initializes a new instance of the Version class
+        /// </summary>
         public Version()
         {
             SetMajor(0);
@@ -15,6 +28,13 @@
             SetRevision(0);
             SetBuild(0);
         }
+        /// <summary>
+        /// Initializes a new instance of the Version class
+        /// </summary>
+        /// <param name="Major">Major number</param>
+        /// <param name="Minor">Minor number</param>
+        /// <param name="Build">Build number</param>
+        /// <param name="Revision">Revision number</param>
         public Version(int Major, int Minor, int Build, int Revision)
         {
             this.SetMajor(Major);
@@ -22,6 +42,13 @@
             this.SetBuild(Build);
             this.SetRevision(Revision);
         }
+        /// <summary>
+        /// Initializes a new instance of the Version class
+        /// </summary>
+        /// <param name="Major">Major number</param>
+        /// <param name="Minor">Minor number</param>
+        /// <param name="Build">Build number</param>
+        /// <param name="Revision">Revision number</param>
         public Version(string Major, string Minor, string Build, string Revision)
         {
 
@@ -37,6 +64,10 @@
             int.TryParse(Revision, out i);
             this.SetRevision(i);
         }
+        /// <summary>
+        /// Initializes a new instance of the Version class
+        /// </summary>
+        /// <param name="copy">Copy of <see cref="Version"/></param>
         public Version(Version copy)
         {
             SetMajor(copy.GetMajor());
@@ -45,37 +76,69 @@
             SetRevision(copy.GetRevision());
         }
 
+        /// <summary>
+        /// Get Major number
+        /// </summary>
+        /// <returns>Major number</returns>
         public int GetMajor()
         {
             return major;
         }
+        /// <summary>
+        /// Set Major number
+        /// </summary>
+        /// <param name="value">Major number</param>
         public void SetMajor(int value)
         {
-            major = value;
+            major = value < 0 ? 0 : value;
         }
+        /// <summary>
+        /// Get Minor number
+        /// </summary>
+        /// <returns>Minor number</returns>
         public int GetMinor()
         {
             return minor;
         }
+        /// <summary>
+        /// Set Minor number
+        /// </summary>
+        /// <param name="value">Minor number</param>
         public void SetMinor(int value)
         {
-            minor = value;
+            minor = value < 0 ? 0 : value;
         }
+        /// <summary>
+        /// Get Build number
+        /// </summary>
+        /// <returns>Build number</returns>
         public int GetBuild()
         {
             return build;
         }
+        /// <summary>
+        /// Set Build number
+        /// </summary>
+        /// <param name="value">Build number</param>
         public void SetBuild(int value)
         {
-            build = value;
+            build = value < 0 ? 0 : value;
         }
+        /// <summary>
+        /// Get Revision number
+        /// </summary>
+        /// <returns>Revision number</returns>
         public int GetRevision()
         {
             return revision;
         }
+        /// <summary>
+        /// Set Revision number
+        /// </summary>
+        /// <param name="value">Revision number</param>
         public void SetRevision(int value)
         {
-            revision = value;
+            revision = value < 0 ? 0 : value;
         }
 
         public override string ToString()
