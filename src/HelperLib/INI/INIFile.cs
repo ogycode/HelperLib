@@ -264,8 +264,8 @@ namespace Verloka.HelperLib.INI
 
                     //remove comment
                     int index = line.IndexOf(comment);
-                    if (index > 0)
-                        line = line.Substring(0, index);
+                    if (index >= 0)
+                        line = line.Remove(index, line.Length - index);
 
                     if (string.IsNullOrWhiteSpace(line))
                         continue;
@@ -297,11 +297,12 @@ namespace Verloka.HelperLib.INI
             while (i <= str.Length - 1)
             {
                 string line = str[i];
+                i++;
 
                 //remove comment
                 int index = line.IndexOf(comment);
-                if (index > 0)
-                    line = line.Substring(0, index);
+                if (index >= 0)
+                    line = line.Remove(index, line.Length - index);
 
                 if (string.IsNullOrWhiteSpace(line))
                     continue;
@@ -319,8 +320,6 @@ namespace Verloka.HelperLib.INI
                 }
                 else
                     sec = con[section];
-
-                i++;
             }
 
             return con;
