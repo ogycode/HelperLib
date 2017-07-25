@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Verloka.HelperLib.Update
 {
@@ -33,6 +34,10 @@ namespace Verloka.HelperLib.Update
         /// Occurs when any exception by WebClient
         /// </summary>
         public event Action<WebException> WebException;
+        /// <summary>
+        /// Occurs when data about update information loaded
+        /// </summary>
+        public event Action<bool> DataLoaded;
 
         /// <summary>
         /// <see cref="List{UpdateElement}"/> with all versions of app
@@ -63,20 +68,26 @@ namespace Verloka.HelperLib.Update
         /// <summary>
         /// Load information about versions from web
         /// </summary>
-        public async void LoadFromWeb()
+        public async Task LoadFromWeb()
         {
-            using (WebClient client = new WebClient())
+            bool result = false;
+            await Task.Run(async () =>
             {
-                try
+                using (WebClient client = new WebClient())
                 {
-                    string resp = await client.DownloadStringTaskAsync(Url);
-                    Read(resp);
+                    try
+                    {
+                        string resp = await client.DownloadStringTaskAsync(Url);
+                        Read(resp);
+                        result = true;
+                    }
+                    catch (WebException e)
+                    {
+                        WebException?.Invoke(e);
+                    }
                 }
-                catch (WebException e)
-                {
-                    WebException?.Invoke(e);
-                }
-            }
+            });
+            DataLoaded?.Invoke(result);
         }
         /// <summary>
         /// Load information about versions from path, Edit mode is enabled
