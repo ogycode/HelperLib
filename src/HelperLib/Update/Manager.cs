@@ -77,6 +77,7 @@ namespace Verloka.HelperLib.Update
                 {
                     try
                     {
+                        client.CachePolicy = new System.Net.Cache.RequestCachePolicy(System.Net.Cache.RequestCacheLevel.Revalidate);
                         string resp = await client.DownloadStringTaskAsync(Url);
                         Read(resp);
                         result = true;

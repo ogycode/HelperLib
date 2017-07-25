@@ -46,6 +46,17 @@ namespace Verloka.HelperLib.Update
         /// <summary>
         /// Initializes a new instance of the DownloadClient clas
         /// </summary>
+        public DownloadClient()
+        {
+            sw = new Stopwatch();
+
+            SavePath = @"C:\\";
+            Files = new List<string>();
+            FileCount = Files.Count;
+        }
+        /// <summary>
+        /// Initializes a new instance of the DownloadClient clas
+        /// </summary>
         /// <param name="Files">List with files will be downloaded, can be empty</param>
         /// <param name="SavePath">Destination location for save files</param>
         public DownloadClient(List<string> Files, string SavePath)
@@ -98,8 +109,8 @@ namespace Verloka.HelperLib.Update
             sw.Start();
             using (webClient = new WebClient())
             {
-                webClient.DownloadFileCompleted += new AsyncCompletedEventHandler(Completed);
-                webClient.DownloadProgressChanged += new DownloadProgressChangedEventHandler(ProgressChanged);
+                webClient.DownloadFileCompleted += new AsyncCompletedEventHandler(CompletedSingle);
+                webClient.DownloadProgressChanged += new DownloadProgressChangedEventHandler(ProgressChangedSingle);
                 try
                 {
                     webClient.DownloadFileAsync(new Uri(urlAddress), location);
@@ -122,10 +133,38 @@ namespace Verloka.HelperLib.Update
             CurrentName = System.IO.Path.GetFileName(new Uri(CurrentUrl).LocalPath);
             CurrentPath = $"{SavePath}\\{CurrentName}";
 
-            DownloadFile(CurrentUrl, CurrentPath);
+            download(CurrentUrl, CurrentPath);
             return false;
         }
-        
+        void download(string urlAddress, string location)
+        {
+            sw.Start();
+            using (webClient = new WebClient())
+            {
+                webClient.DownloadFileCompleted += new AsyncCompletedEventHandler(Completed);
+                webClient.DownloadProgressChanged += new DownloadProgressChangedEventHandler(ProgressChanged);
+                try
+                {
+                    webClient.DownloadFileAsync(new Uri(urlAddress), location);
+                }
+                catch (WebException e)
+                {
+                    WebException?.Invoke(e);
+                }
+            }
+        }
+
+        private void ProgressChangedSingle(object sender, DownloadProgressChangedEventArgs e)
+        {
+            double speed = e.BytesReceived / 1024d / sw.Elapsed.TotalSeconds;
+            int perc = (e.ProgressPercentage + TotalPerc);
+            DownloadProgress?.Invoke(CurrentName, perc, speed);
+        }
+        private void CompletedSingle(object sender, AsyncCompletedEventArgs e)
+        {
+            sw.Reset();
+            DownloadCompleted?.Invoke();
+        }
         private void ProgressChanged(object sender, DownloadProgressChangedEventArgs e)
         {
             double speed = e.BytesReceived / 1024d / sw.Elapsed.TotalSeconds;
