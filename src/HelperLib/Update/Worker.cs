@@ -22,10 +22,7 @@ namespace Verloka.HelperLib.Update
         /// <param name="path">Path to folder with files</param>
         /// <param name="save">Destination location of save</param>
         /// <returns>Async <see cref="Task"/></returns>
-        public async static Task Archive(string path, string save)
-        {
-            await Task.Run(() => ZipFile.CreateFromDirectory(path, save, CompressionLevel.Optimal, false, Encoding.UTF8));
-        }
+        public async static Task Archive(string path, string save) => await Task.Run(() => ZipFile.CreateFromDirectory(path, save, CompressionLevel.Optimal, false, Encoding.UTF8));
         /// <summary>
         /// Unzip archive (unzio files)
         /// </summary>
@@ -37,7 +34,11 @@ namespace Verloka.HelperLib.Update
             if (!Directory.Exists(save))
                 Directory.CreateDirectory(save);
 
-            await Task.Run(() => ZipFile.ExtractToDirectory(path, save, Encoding.UTF8));
+            try
+            {
+                await Task.Run(() => ZipFile.ExtractToDirectory(path, save, Encoding.UTF8));
+            }
+            catch { }
         }
     }
 }

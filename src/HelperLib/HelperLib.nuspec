@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>Verloka.HelperLib</id>
-    <version>1.4.0.3</version>
+    <version>1.4.0.4</version>
     <title>HelperLib</title>
     <authors>Verloka Vadim</authors>
     <owners>Verloka Vadim</owners>
@@ -11,7 +11,7 @@
     <iconUrl>https://raw.githubusercontent.com/ogycode/HelperLib/master/merch/icon.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Tool for help: settings, update, ini-parser, localization</description>
-    <releaseNotes>All help-part completed</releaseNotes>
+    <releaseNotes>Fix DownloadClient and Manager of Update</releaseNotes>
     <copyright>Copyright Verloka Vadim 2017</copyright>
     <tags>settings ini-parser localization update</tags>
   </metadata>
