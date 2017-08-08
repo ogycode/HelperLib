@@ -109,30 +109,15 @@ namespace Verloka.HelperLib.Update
             sw.Start();
             using (webClient = new WebClient())
             {
-                HttpWebResponse response = null;
-                var request = (HttpWebRequest)WebRequest.Create(urlAddress);
-                request.Method = "HEAD";
-                
                 try
                 {
-                    response = (HttpWebResponse)request.GetResponse();
-
                     webClient.DownloadFileCompleted += new AsyncCompletedEventHandler(CompletedSingle);
                     webClient.DownloadProgressChanged += new DownloadProgressChangedEventHandler(ProgressChangedSingle);
-                    try
-                    {
-                        webClient.DownloadFileAsync(new Uri(urlAddress), location);
-                    }
-                    catch (WebException e)
-                    {
-                        WebException?.Invoke(e);
-                    }
+                    webClient.DownloadFileAsync(new Uri(urlAddress), location);
                 }
-                catch (WebException e) {  WebException?.Invoke(e); }
-                finally
+                catch (WebException e)
                 {
-                    if (response != null)
-                        response.Close();
+                    WebException?.Invoke(e);
                 }
             }
         }

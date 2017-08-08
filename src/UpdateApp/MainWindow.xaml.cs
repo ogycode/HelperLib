@@ -216,6 +216,9 @@ namespace UpdateApp
             newElement.SetTitle(tbTitle.Text);
             newElement.SetChangeNote(tbChangnote.Text);
             newElement.SetVersionNumber($"{tbMajor.Text}.{tbMinor.Text}.{tbBuild.Text}.{tbRevision.Text}");
+
+
+
             newElement.SetEXE(tbExeFile.Text);
             newElement.SetZIP(tbZipFile.Text);
 
